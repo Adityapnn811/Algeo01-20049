@@ -7,15 +7,32 @@ public class Matriks{
     private int baris, kolom;
     private double[][] isi;
     
-    // Konstruktor Matriks
+  /* *** Konstruktor membentuk Matrix *** */
     Matriks(int b, int k){
         this.baris = b;
         this.kolom = k;
         this.isi = new double[b][k];
     }
+    int Baris(){
+        // buat print baris dari matriks 
+       return this.baris; 
+    }
+    int Kolom(){
+        // buat print kolom dari matriks 
+        return this.kolom;
+    }
+    double Isi(int b,int k){
+        // buat print isi[b][k] dari matriks
+        return this.isi[b][k];
+    }
+    void ubahIsi(int b,int k, double newValue){
+        // buat nggganti isi[b][k] menjadi new value
+        this.isi[b][k] = newValue;
+    }
 
-    // Method
-    // Mengisi matriks
+
+    
+    /* ********** KELOMPOK BACA/TULIS ********** */
     void isiMatriks() {
         for (int i = 0; i < this.baris; i++){
             for (int j = 0; j < this.kolom; j++) {
