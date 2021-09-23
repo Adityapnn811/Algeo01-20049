@@ -8,16 +8,15 @@ public class MenuDeterminan{
         System.out.println("1. Metode reduksi");
         System.out.println("2. Metode kofaktor");
         System.out.print("masukkan pilihan anda(1 atau 2) : ");
-        pilihan = sc.nextInt();
+        pilihan = Main.RobustIntInput(1, 2);
         // masukkan matriks, bukan matriks augmented
-        System.out.print("masukkan matriks, mau dari terminal(1) atau dari file(2)?\n->");
-        int pilihanInputMatriks;
-        pilihanInputMatriks = sc.nextInt();
+        System.out.print("masukkan matriks, mau dari terminal(1) atau dari file(2)?\n");
+        int pilihanInputMatriks = Main.RobustIntInput(1, 2);
         int N;
         Matriks m;
         if(pilihanInputMatriks == 1){
             System.out.print("masukkan ukuran matriks (bukan augmented): ");
-            N = sc.nextInt();
+            N = Main.RobustIntInput(1, 10000);
             m = new Matriks(N, N);
             m.isiMatriks();
         }
@@ -52,7 +51,25 @@ public class MenuDeterminan{
             mCof.displayMatriks();
             System.out.println("mau menggunakan cofactor baris(1) atau kolom(2)?");
             int pilihanbk = sc.nextInt();
-            
+            if (pilihanbk == 1){
+                System.out.println("mau baris ke berapa:");
+                int bariske = sc.nextInt();
+                System.out.print("determinan: = ");
+                double hasil = 0;
+                for(int k = 0;k < mCof.Kolom();k++){
+                    System.out.print(mCof.Isi(bariske, k));
+                    System.out.print("*");
+                    System.out.print(m.Isi(bariske, k));
+                    if (k < mCof.Kolom() -1 ){
+                        System.out.print(" + ");
+                    }
+                    else{
+                        System.out.print(" = ");
+                    }
+                    hasil = hasil + (mCof.Isi(bariske,k)*m.Isi(bariske, k));
+                }
+                System.out.println(hasil);
+            }
         }
     }
 }

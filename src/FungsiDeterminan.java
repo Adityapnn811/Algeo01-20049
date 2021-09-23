@@ -57,7 +57,6 @@ public class FungsiDeterminan {
                 if(b+k % 2 != 0){
                     nilai = nilai* -1;
                 }
-
                 mCofactor.ubahIsi(b, k, nilai);
             }
         }
