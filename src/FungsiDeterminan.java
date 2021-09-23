@@ -1,4 +1,4 @@
-public class FungsiDeterminan {
+public class FungsiDeterminan{
     private static Matriks pengubahOBE(Matriks m, int BarisDiubah, int BarisPengubah, double ratio){
         for(int k = 0;k < m.Kolom(); k++){
             double newValue = m.Isi(BarisDiubah, k) - (ratio*m.Isi(BarisPengubah,k));
@@ -7,7 +7,7 @@ public class FungsiDeterminan {
         return m;
     }
     public static Matriks detReduksiOBE(Matriks m){
-        // menerima matiks m, dan mereturn m yang telah mengalami OBE
+        // menerima matiks m, dan mereturn m yang telah mengalami OBE hingga jadi 'segitiga atas'
         // prekondisi matriks square 
         for(int bk = 0;bk< m.Baris();bk++){
             for(int b = bk+1;b < m.Baris();b++){
