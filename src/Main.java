@@ -44,6 +44,7 @@ public class Main{
         }//end of while
     }//end of main
     public static int RobustIntInput(int Lowest, int Highest){
+        //untuk menerima input integer diantara lowest dan highest, kalo lebih dari range itu, atau bukan integer, bakal di loop sampe input bener
         //lowest and highest termasuk ya(jdi input = lowest itu gamasalah).
         int pilihan = 1;
         while(true){
