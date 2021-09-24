@@ -28,6 +28,7 @@ public class Main{
             else if(pilihan == 3){
                 System.out.println("===== MENU Matriks Balikan =====");
                 //pindah ke menu matriks balikan
+                MenuInvers.submenuInvers();
             }
             else if(pilihan == 4){
                 System.out.println("===== MENU Interpolasi Polinom =====");
