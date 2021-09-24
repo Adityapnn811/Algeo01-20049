@@ -32,6 +32,7 @@ public class Main{
             else if(pilihan == 4){
                 System.out.println("===== MENU Interpolasi Polinom =====");
                 //pindah ke menu interpolasi polinom
+                MenuInterpolasi.Interpolasi();
             }
             else if(pilihan == 5){
                 System.out.println("===== MENU Regresi Linear Berganda =====");
