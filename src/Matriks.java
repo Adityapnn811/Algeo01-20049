@@ -1,6 +1,10 @@
 import java.util.*;
+import java.lang.Math;
+import java.nio.file.Path;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Matriks{
     static Scanner sc = new Scanner(System.in);
@@ -9,16 +13,16 @@ public class Matriks{
     private int baris, kolom;
     private double[][] isi;
     
-  /* *** Konstruktor membentuk Matrix *** */
-    public Matriks(int b, int k){
+    /* *** Konstruktor membentuk Matrix *** */
+    Matriks(int b, int k){
         this.baris = b;
         this.kolom = k;
         this.isi = new double[b][k];
     }
     /* *** Fungsi primitif dan basic lain *** */
     int Baris(){
-        // buat print baris dari matriks 
-       return this.baris; 
+        // buat print baris dari matriks
+       return this.baris;
     }
     int Kolom(){
         // buat print kolom dari matriks 
@@ -39,13 +43,15 @@ public class Matriks{
         this.kolom = k;
     }
 
-    void copyMatriks(Matriks mIn, Matriks mOut){
-        mOut = new Matriks(mIn.Baris(), mIn.Kolom());
+    // Copy matriks dan menerima parameter mIn dan mengeluarkan matriks mOut
+    Matriks copyMatriks(Matriks mIn){
+        Matriks mOut = new Matriks(mIn.Baris(), mIn.Kolom());
         for (int i = 0; i < mOut.Baris(); i++){
             for (int j = 0; j < mOut.Kolom(); j++){
                 ubahIsi(i, j, mIn.Isi(i, j));
             }
         }
+        return mOut;
     }
 
     // Buat tukar baris tukar kolom
@@ -71,20 +77,33 @@ public class Matriks{
     }
 
     // Mengecek apakah semua elemen pada baris = 0
-    boolean semuaBarisNol(int b, int k){
+    boolean semuaBarisNol(int lastIdxBaris, int jmlKolom){
         boolean semuaNol = true;
-        for (int i = 0; i < b; i++){
-            for (int j = 0; j < k; j++){
-                if (this.isi[i][j] != 0){
-                    semuaNol = false;
-                }
+        int j =0;
+        while (j < jmlKolom && semuaNol){
+            if (this.isi[lastIdxBaris][j] != 0){
+                semuaNol = false;
+            } else {
+                j++;
             }
         }
         return semuaNol;
     }
 
-    // Fungsi OBE
-    void OBEGaussJordan(int b, int k){
+    // Fungsi transpose matriks
+    static Matriks transpose(Matriks m){
+        Matriks temp = new Matriks(m.kolom, m.baris);
+        for (int i = 0; i < m.kolom; i++){
+            for (int j = 0; j < m.baris; j++){
+                temp.ubahIsi(i, j, m.isi[j][i]);
+            }
+        }
+        return temp;
+    }
+
+    /* *** PROSEDUR OBE *** */
+    // GAUSS
+    void OBEGauss(int b, int k){
         //cari di kolom 1 mana yang enggak 0, terus tuker ke paling atas (sesuaikan pass ke berapa)
         // terus lakuin OBE sampe bawahnya nol semua
         int b_pass = 0, k_pass = 0; //inisiasi pass baris dan kolom
@@ -107,8 +126,6 @@ public class Matriks{
                 for (int j = 0; j < k; j++){
                     this.ubahIsi(b_pass, j, (this.Isi(b_pass, j)/pembagi));
                 }
-                // System.out.println("Setelah membuat leadin one");
-                // this.displayMatriks();
                 // Kurangi baris lain
                 // cek apakah sudah pass terakhir
                 if (b_pass != b-1){
@@ -122,13 +139,19 @@ public class Matriks{
                         }
                     }
                 }
-                // System.out.println("Setelah mengurangi baris lain");
-                // this.displayMatriks();
                 b_pass += 1;
                 k_pass += 1;
                 b_ganti = b_pass;
             }
         }
+    }
+    
+    // GAUSS JORDAN
+    void OBEGaussJordan(int b, int k){
+        //cari di kolom 1 mana yang enggak 0, terus tuker ke paling atas (sesuaikan pass ke berapa)
+        // terus lakuin OBE sampe bawahnya nol semua
+        int b_pass = 0, k_pass = 0; //inisiasi pass baris dan kolom
+        this.OBEGauss(b, k);
         // Reduksi menjadi gauss-jordan
         b_pass = b -1; k_pass = 0;
         while (b_pass > -1 && k_pass < k) {
@@ -157,55 +180,8 @@ public class Matriks{
         }
     }
 
-    /* PROSEDUR OBE GAUSS */
-    void OBEGauss(int b, int k){
-        //cari di kolom 1 mana yang enggak 0, terus tuker ke paling atas (sesuaikan pass ke berapa)
-        // terus lakuin OBE sampe bawahnya nol semua
-        int b_pass = 0, k_pass = 0; //inisiasi pass baris dan kolom
-        int b_ganti = 0; 
-        double pembagi;
-        while (b_pass < b && k_pass < k){
-            if (this.Isi(b_ganti, k_pass) == 0){
-                if (b_ganti == b - 1){ // biar nilai b_ganti ngga lebih dari b_pass
-                    b_ganti = b_pass;
-                    k_pass += 1;
-                } else{
-                    b_ganti = b_ganti + 1;
-                }
-            } else {
-                if (b_ganti != b_pass){
-                    this.tukarBaris(b_ganti, b_pass); 
-                }
-                pembagi = this.Isi(b_pass, k_pass);
-                // Jadiin leading one
-                for (int j = 0; j < k; j++){
-                    this.ubahIsi(b_pass, j, (this.Isi(b_pass, j)/pembagi));
-                }
-                // System.out.println("Setelah membuat leadin one");
-                // this.displayMatriks();
-                // Kurangi baris lain
-                // cek apakah sudah pass terakhir
-                if (b_pass != b-1){
-                    for (int i = b_pass + 1; i < b; i++){
-                        if (this.isi[i][k_pass] != 0){
-                            double pengali = this.isi[i][k_pass];
-                            this.isi[i][k_pass] = 0;
-                            for (int j = k_pass + 1; j < k; j++){
-                                this.isi[i][j] -= this.Isi(b_pass, j) * pengali;
-                            }       
-                        }
-                    }
-                }
-                // System.out.println("Setelah mengurangi baris lain");
-                // this.displayMatriks();
-                b_pass += 1;
-                k_pass += 1;
-                b_ganti = b_pass;
-            }
-        }
-    }
-
     /* ********** KELOMPOK BACA/TULIS ********** */
+    // Mengisi matriks
     void isiMatriks() {
         for (int i = 0; i < this.baris; i++){
             for (int j = 0; j < this.kolom; j++) {
@@ -223,6 +199,7 @@ public class Matriks{
             System.out.println();
         }
     }
+
     public static int FileRow(String FileName){
         //mengembalikan jumlah kolom dari suatu file. kalo filenya gk ketemu, return -1
         int lines = -1;
@@ -262,7 +239,7 @@ public class Matriks{
         return kolom;
     }
 
-    public static Matriks ReadMatriksFromFile(String FileName,int baris, int kolom){ 
+    public static Matriks ReadMatriksFromFile(String FileName, int baris, int kolom){ 
     //inget kalo dari file itu augmented, jdi kalo butuh yg left side only, jangan lupa modif matriksnya sendiri
         Matriks m = new Matriks(baris, kolom);
         try {
@@ -293,7 +270,41 @@ public class Matriks{
         return m;
     }
 
-    /* PROSEDUR INVERS DENGAN OBE */
+    void outputToFile(){
+        try{
+            FileWriter writer = new FileWriter("hasil.txt"); 
+            for (int b = 0; b < this.baris; b++){
+                for (int k = 0; k < this.kolom; k++) {
+                    writer.write(Float.toString((float) this.isi[b][k]));
+                    if (k != this.kolom - 1){
+                        writer.write(" ");
+                    }
+                }
+                writer.write("\n");
+            }
+            System.out.println("File berhasil disimpan di hasil.txt");
+            writer.close();
+        } catch (IOException e){
+            System.out.println("Terjadi sebuah error");
+            e.printStackTrace();
+        }
+    }
+
+    void konfirmOutputkeFile(){
+        char konfirm;
+            do{
+                System.out.print("Apakah Anda ingin menyimpan hasil ke sebuah file? (y/n)\n->");
+                konfirm = sc.next().charAt(0);
+                if (konfirm != 'y' && konfirm != 'n'){
+                    System.out.println("Input harus berupa y/n");
+                }
+            } while (konfirm != 'y' && konfirm != 'n');
+            if (konfirm == 'y'){
+                this.outputToFile();
+            }
+    }
+
+    /* *** PROSEDUR INVERS DENGAN OBE *** */
     void inversMatriksOBE(){
         // Ubah ukuran matriks dan beri matriks identitas, simpan di mTemp
         Matriks mTemp = new Matriks(this.baris, this.kolom * 2);
@@ -313,12 +324,11 @@ public class Matriks{
         }
         // Lakukan OBE
         mTemp.OBEGaussJordan(mTemp.Baris(), mTemp.Kolom());
-        // mTemp.displayMatriks(); // buat ngecek
         //Cek apakah ada baris yg 0 semua
         boolean adaBarisNol = false;
         int l = 0;
         while (l < mTemp.Baris() && !adaBarisNol){
-            adaBarisNol = mTemp.semuaBarisNol(mTemp.Baris(), mTemp.Kolom()/2);
+            adaBarisNol = mTemp.semuaBarisNol(mTemp.Baris() - 1, mTemp.Kolom()/2);
             l += 1;
         }
         if (!adaBarisNol){
@@ -326,8 +336,8 @@ public class Matriks{
             for (int i = 0; i < this.baris; i++){
                 for (int j = 0; j < this.kolom; j++) {
                     this.isi[i][j] = mTemp.Isi(i, j + (mTemp.Kolom()/2));
-                    if (this.isi[i][j] == -0){
-                        this.isi[i][j] *= -1;
+                    if (this.isi[i][j] == -0.0){
+                        this.isi[i][j] = Math.abs(-0.0);
                     }
                 }
             }
@@ -336,12 +346,14 @@ public class Matriks{
         } else{
             System.out.println("Matriks tidak memiliki balikan!");
         }
-        // this.displayMatriks(); // buat ngecek
     }
 
     /* PROSEDUR INVERS DENGAN ADJOIN */
-    void inversMatriksAdj(){
-        
+    void inversMatriksAdj(Matriks self){
+        // buat matriks adjoin
+        Matriks adj = new Matriks(1, 1);
+        adj = FungsiDeterminan.cofactor(self); // Buat cofactor dari matriks awal
+        adj = transpose(adj); // transpose cofactor jadi adjoin
+        adj.displayMatriks(); // buat ngecek
     }
 }
-

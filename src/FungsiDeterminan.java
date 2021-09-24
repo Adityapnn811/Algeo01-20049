@@ -54,8 +54,15 @@ public class FungsiDeterminan{
                 for(int bk = 0;bk < temp.Baris();bk++){
                     nilai = nilai* temp.Isi(bk, bk);
                 }
-                if(b+k % 2 != 0){
-                    nilai = nilai* -1;
+                // cek kalo indeks barisnya genap, berarti + dimulai dari kolom 0(genap) (mulai dari 0)
+                if(b % 2 == 0){
+                    if (k % 2 != 0){
+                        nilai = nilai* -1;
+                    } else{}
+                } else { //kalo indeks barisnya ganjil, berarti + dimulai dari kolom 1(ganjil)
+                    if (k % 2 == 0){
+                        nilai = nilai* -1;
+                    } else{}
                 }
                 mCofactor.ubahIsi(b, k, nilai);
             }

@@ -2,27 +2,44 @@ import java.util.*;
 public class MenuInvers {
     static Scanner sc = new Scanner(System.in);
     public static void submenuInvers(){
-        int pilihan;
+        int pilihan, pilihanInputMatriks;
         System.out.println("Pilih metode invers:");
         System.out.println("1. Metode OBE");
         System.out.println("2. Metode Adjoin");
-        System.out.print("masukkan pilihan anda(1 atau 2) : ");
-        pilihan = sc.nextInt();
-        System.out.print("masukkan matriks, mau dari terminal(1) atau dari file(2)?\n->");
-        int pilihanInputMatriks;
-        pilihanInputMatriks = sc.nextInt();
-        int b;
+        // cek input pilihan
+        pilihan = Main.RobustIntInput(1, 2);
+        // input cara input
+        System.out.println("Pilih cara input matriks:");
+        System.out.println("1. Dari console");
+        System.out.println("2. Dari file");
+        pilihanInputMatriks = Main.RobustIntInput(1, 2);
+        
+        int b; // baris
         Matriks m;
         // Kalo input dari console
         if (pilihanInputMatriks == 1){
-            System.out.println("Input jumlah baris matriks (jumlah kolom = baris)");
+            System.out.println("Input jumlah baris matriks (jumlah kolom = baris):");
+            System.out.print("->");
             b = sc.nextInt();
             m = new Matriks(b, b);
             System.out.println("Input isi matriks");
             m.isiMatriks();
             if (pilihan == 1) {
                 m.inversMatriksOBE();
+            } else if(pilihan == 2){
+                m.inversMatriksAdj(m);
             }
+            m.konfirmOutputkeFile();
+        } else if (pilihanInputMatriks == 2) {
+            System.out.println("Masukkan nama file yang akan dibaca: ");
+            String namaFile = sc.nextLine();
+            m = Matriks.ReadMatriksFromFile(namaFile, Matriks.FileRow(namaFile), Matriks.FileColumn(namaFile));
+            if (pilihan == 1) {
+                m.inversMatriksOBE();
+            } else if(pilihan == 2){
+                // panggil inversmatriksadj
+            }
+            m.konfirmOutputkeFile();
         }
     }
 }
