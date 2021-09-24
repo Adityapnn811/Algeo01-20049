@@ -237,7 +237,7 @@ public class Matriks{
             
         }
         catch (FileNotFoundException e) {
-            System.out.println("FILENYA GADA WOI BOONG LU row(ato bisa juga typo)");
+            System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
             e.printStackTrace();
         }
         return lines;
@@ -256,7 +256,7 @@ public class Matriks{
             reader.close();
         }
         catch (FileNotFoundException e) {
-            System.out.println("FILENYA GADA WOI BOONG LU col(ato bisa juga typo)");
+            System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
             e.printStackTrace();
         }
         return kolom;
@@ -264,7 +264,6 @@ public class Matriks{
 
     public static Matriks ReadMatriksFromFile(String FileName,int baris, int kolom){ 
     //inget kalo dari file itu augmented, jdi kalo butuh yg left side only, jangan lupa modif matriksnya sendiri
-        System.out.println("tessssssss");
         Matriks m = new Matriks(baris, kolom);
         try {
             //buat matriksnya dulu

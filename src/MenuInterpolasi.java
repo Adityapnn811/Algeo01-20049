@@ -7,7 +7,7 @@ public class MenuInterpolasi {
         int pilihan = Main.RobustIntInput(1, 2);
         Matriks m;
         if (pilihan == 1){
-            System.out.print("masukkan nilai N, yaitu jumlah titik:\n->");
+            System.out.print("masukkan nilai N, yaitu jumlah titik:\n");
             int n = Main.RobustIntInput(1, 10000);
             m = new Matriks(n, n+1);
             System.out.format("masukkan nilai (x,y) sebanyak %dx:\n", n);
@@ -39,5 +39,23 @@ public class MenuInterpolasi {
             }
         }//end of pilihan 2
         //waktunya gauss stuff
+
+        m.OBEGaussJordan(m.Baris(), m.Kolom());
+
+        System.out.print("p(x) = ");
+        double temp = 0;
+        for(int b = 0;b< m.Baris();b++){
+            temp = m.Isi(b, m.Kolom() - 1);
+            if(temp != 0){
+                System.out.format("%.2f",temp);
+                if( b != 0){
+                    System.out.format("*x^(%d)", b);
+                }
+                if(b< m.Baris()-1){
+                    System.out.print(" + ");
+                }
+            }
+        }
+        System.out.println("");
     }
 }
