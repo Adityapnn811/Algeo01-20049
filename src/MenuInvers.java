@@ -38,7 +38,7 @@ public class MenuInvers {
             if (pilihan == 1) {
                 m.inversMatriksOBE();
             } else if(pilihan == 2){
-                // panggil inversmatriksadj
+                m.inversMatriksAdj(m);
             }
             m.konfirmOutputkeFile();
         }
