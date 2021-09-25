@@ -28,7 +28,7 @@ public class MenuInterpolasi {
             int baris = Matriks.FileRow(filename);
             m = new Matriks(baris, baris + 1);
             Matriks mfile = new Matriks(baris, 2);
-            mfile = Matriks.ReadMatriksFromFile(filename, baris, 2);
+            mfile.ReadMatriksFromFile(filename);
             for(int b = 0;b< mfile.Baris();b++){
                 Double x = mfile.Isi(b, 0); 
                 Double y = mfile.Isi(b, 1); 

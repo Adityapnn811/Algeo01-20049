@@ -21,30 +21,37 @@ public class Matriks{
     }
     /* *** Fungsi primitif dan basic lain *** */
     int Baris(){
-        // buat print baris dari matriks
-       return this.baris;
+        //untuk mendapatkan baris dari matriks
+       return this.baris; 
     }
     int Kolom(){
-        // buat print kolom dari matriks 
+        // buat mendapatkan kolom dari matriks
         return this.kolom;
     }
     double Isi(int b,int k){
-        // buat print isi[b][k] dari matriks
+        // untuk mendapatkan isi dari matriks di index baris b dan kolom k
         return this.isi[b][k];
     }
     void ubahIsi(int b,int k, double newValue){
-        // buat nggganti isi[b][k] menjadi new value
+        //IS matriks this terdifinisi, isi sembarang
+        //FS matriks this pada baris b dan kolom k bernilai newValue
         this.isi[b][k] = newValue;
     }
     void ubahBaris(int b){
+        //IS matriks this terdefinisi
+        //FS baris matriks this berubah menjadi b. b harus lebih kecil dari baris sebelumnya, hanya mengubah atribut, tidak mengubah ukuran 
         this.baris = b;
     }
     void ubahKolom(int k){
+        //IS matriks this terdefinisi
+        //FS kolom matriks this berubah menjadi k. k harus lebih kecil dari baris sebelumnya, hanya mengubah atribut, tidak mengubah ukuran
         this.kolom = k;
     }
 
     // Copy matriks dan menerima parameter mIn dan mengeluarkan matriks mOut
     Matriks copyMatriks(Matriks mIn){
+        //IS matriks mIn dan mOut terdefinisi. mIn memiliki isi.
+        //FS mOut menjadi duplikat dari mIn
         Matriks mOut = new Matriks(mIn.Baris(), mIn.Kolom());
         for (int i = 0; i < mOut.Baris(); i++){
             for (int j = 0; j < mOut.Kolom(); j++){
@@ -56,6 +63,8 @@ public class Matriks{
 
     // Buat tukar baris tukar kolom
     void tukarBaris(int b1, int b2){
+        //IS baris matriks this terdefinisi, baris b1 dan baris b2 memiliki isi
+        //FS isi matriks di baris b1 ditukar dengan isi dari baris b2
         int j;
         double temp;
         for (j = 0; j < this.kolom; j++){
@@ -67,6 +76,8 @@ public class Matriks{
     }
 
     void tukarKolom(int k1, int k2){
+        //IS baris matriks this terdefinisi, kolom k1 dan kolom k2 memiliki isi
+        //FS isi matriks di baris b1 ditukar dengan isi dari baris b2
         int i;
         double temp;
         for (i = 0; i < this.baris; i++){
@@ -76,8 +87,8 @@ public class Matriks{
         }
     }
 
-    // Mengecek apakah semua elemen pada baris = 0
     boolean semuaBarisNol(int lastIdxBaris, int jmlKolom){
+        // Menghasilkan true jika semua elemen pada baris bernilai nol
         boolean semuaNol = true;
         int j =0;
         while (j < jmlKolom && semuaNol){
@@ -192,6 +203,8 @@ public class Matriks{
 
     // Menampilkan matriks
     public void displayMatriks(){
+    //IS matriks this terdefinisi dan sudah terisi.
+    //FS ditampilkan dilayar isi dari matriks this.
         for (int i = 0; i < this.baris; i++){
             for (int j = 0; j < this.kolom; j++) {
                 System.out.printf("%.3f ", this.isi[i][j]);
@@ -200,8 +213,9 @@ public class Matriks{
         }
     }
 
+    /*PROSEDUR DAN FUNGSI UNTUK INPUT FILE*/
     public static int FileRow(String FileName){
-        //mengembalikan jumlah kolom dari suatu file. kalo filenya gk ketemu, return -1
+        //mengembalikan jumlah kolom dari file dengan nama FileName. kalo filenya gk ketemu, return -1
         int lines = -1;
         try{
             Scanner reader = new Scanner(new File(FileName));
@@ -220,7 +234,7 @@ public class Matriks{
         return lines;
     }
     public static int FileColumn(String FileName){
-        //mengembalikan jumlah baris dari suatu file. kalo filenya gk ketemu, return -1
+        //mengembalikan jumlah baris dari suatu file dengan nama FileName. kalo filenya gk ketemu, return -1
         int kolom = -1;
         try{
             Scanner reader = new Scanner(new File(FileName));
@@ -239,21 +253,19 @@ public class Matriks{
         return kolom;
     }
 
-    public static Matriks ReadMatriksFromFile(String FileName, int baris, int kolom){ 
-    //inget kalo dari file itu augmented, jdi kalo butuh yg left side only, jangan lupa modif matriksnya sendiri
-        Matriks m = new Matriks(baris, kolom);
+    void ReadMatriksFromFile(String FileName){
+        //IS matriks This terdefinisi, belum memiliki isi.
+        //FS matriks sudah terisi sesuai dengan isi dari file FileName(pasti augmented)
         try {
-            //buat matriksnya dulu
             int b = 0;
             int k = 0;
             // isi matriks
             File myObj = new File(FileName);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextDouble()) {
-              double data = myReader.nextDouble();
-              m.ubahIsi(b, k, data);
+              this.isi[b][k] = myReader.nextDouble();
               //next data in matriks
-              if(k < m.Kolom() - 1){
+              if(k < this.kolom - 1){
                   k++;
               }
               else{
@@ -267,7 +279,6 @@ public class Matriks{
             System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
             e.printStackTrace();
         }
-        return m;
     }
 
     void outputToFile(){
@@ -305,6 +316,8 @@ public class Matriks{
     }
 
     /* *** PROSEDUR INVERS DENGAN OBE *** */
+    /* ********** KELOMPOK FUNGSI TAMBAHAN ********** */
+    /* PROSEDUR INVERS DENGAN OBE */
     void inversMatriksOBE(){
         // Ubah ukuran matriks dan beri matriks identitas, simpan di mTemp
         Matriks mTemp = new Matriks(this.baris, this.kolom * 2);
@@ -355,5 +368,69 @@ public class Matriks{
         adj = FungsiDeterminan.cofactor(self); // Buat cofactor dari matriks awal
         adj = transpose(adj); // transpose cofactor jadi adjoin
         adj.displayMatriks(); // buat ngecek
+    }
+
+    /* PROSEDUR UNTUK MENDAPATKAN DETERMINAN DENGAN CARA OBE */
+    void pengubahOBE(int BarisDiubah, int BarisPengubah, double ratio){
+        //IS, this terdefinisi.
+        //FS, this pada BarisDiubah = BarisDiubah - ratio*BarisPengubah, untuk setiap kolom
+        for(int k = 0;k < this.kolom; k++){
+            this.isi[BarisDiubah][k] = this.isi[BarisDiubah][k] - (ratio*this.isi[BarisPengubah][k]);
+        }
+    }
+    void detReduksiOBE(){
+        // IS matriks this terdefinisi berbentuk kotak dan sudah terisi
+        // matriks this berubah menjadi berbentuk 'segitiga atas'
+        for(int bk = 0;bk< this.baris;bk++){
+            for(int b = bk+1;b < this.baris;b++){
+                if (this.isi[b][bk] != 0){
+                    double ratio = this.isi[b][bk]/this.isi[bk][bk];
+                    this.pengubahOBE(b, bk, ratio);
+                }
+            }
+        }
+    }
+    void ditutupi(Matriks m, int btutup, int ktutup){
+        //IS matriks m berbentuk square, berisi data. matriks this sudah terdefinisi, berukuran[barism - 1][kolomm -1]
+        //FS matriks this berisi data dari matriks m yang sudah 'ditutupi' pada baris btutup dan kolom ktutup
+        int bIsi,kIsi;
+        for(int b = 0; b < this.baris;b++){
+            for(int k = 0 ;k < this.kolom;k++){
+                if (b >= btutup){
+                    bIsi = b+1;
+                }
+                else
+                    bIsi = b;
+                if(k >= ktutup){
+                    kIsi = k+1;
+                }
+                else
+                    kIsi = k;
+                this.isi[b][k] =  m.isi[bIsi][kIsi];
+            }
+        }
+    }
+
+    /*PROSEDUR UNTUK MENDAPATKAN DETERMINAN DENGAN CARA COFACTOR */
+    void cofactor(Matriks m){
+        //IS matriks m terdefinisi, berbentuk square dan sudah terisi. matriks this terdefinisi dengan ukuran yang sama dengan matriks m
+        //FS matriks this berisi cofactor dari matriks m
+        Matriks temp = new Matriks(m.Baris() - 1, m.Kolom() - 1); //untuk menyimpan array 'yang ditutupi'
+        double nilai;
+        for(int b = 0;b< m.baris;b++){
+            for(int k = 0;k < m.kolom;k++){
+                nilai = 1;
+                // definisikan nilai sebagai determinan dari array yang sudah ditutupi, lengkap dengan plus minusnya
+                temp.ditutupi(m,b,k);
+                temp.detReduksiOBE();
+                for(int bk = 0;bk < temp.Baris();bk++){
+                    nilai = nilai* temp.Isi(bk, bk);
+                }
+                if(b+k % 2 != 0){
+                    nilai = nilai* -1;
+                }
+                this.isi[b][k] = nilai;
+            }
+        }
     }
 }
