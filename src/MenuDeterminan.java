@@ -20,7 +20,7 @@ public class MenuDeterminan{
             int N;
             Matriks m;
             if(pilihanInputMatriks == 1){
-                System.out.print("masukkan ukuran matriks (bukan augmented): ");
+                System.out.println("masukkan ukuran matriks (1 angka saja, bukan augmented): ");
                 N = Main.RobustIntInput(1, 10000);
                 m = new Matriks(N, N);
                 m.isiMatriks();
@@ -31,7 +31,7 @@ public class MenuDeterminan{
                 int baris = Matriks.FileRow(filename);
                 int kolom = Matriks.FileColumn(filename);
                 m = new Matriks(baris, kolom);
-                m = Matriks.ReadMatriksFromFile(filename, baris, kolom);
+                m.ReadMatriksFromFile(filename);
                 m.ubahKolom(m.Kolom() - 1);
             }
             
@@ -41,7 +41,7 @@ public class MenuDeterminan{
             else{
                 if (pilihan == 1){ //hitung determinan dengan OBE  
                     System.out.println("matriks setelah di lakukan OBE:");
-                    m = FungsiDeterminan.detReduksiOBE(m);
+                    m.detReduksiOBE();
                     m.displayMatriks();
                     System.out.print("Determinannya: ");
                     double hasil  = 1;
@@ -55,11 +55,11 @@ public class MenuDeterminan{
                         }
                         hasil = hasil * m.Isi(b,b);
                     }
-                    System.out.print(hasil);
+                    System.out.println(hasil);
                 }
                 if(pilihan == 2){ //hitung dengan cofactor
                     Matriks mCof = new Matriks(m.Baris(), m.Kolom());
-                    mCof = FungsiDeterminan.cofactor(m);
+                    mCof.cofactor(m);
                     System.out.println("berikut matriks cofactornya:");
                     mCof.displayMatriks();
                     System.out.println("mau menggunakan cofactor baris(1) atau kolom(2)?");
