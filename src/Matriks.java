@@ -282,6 +282,8 @@ public class Matriks{
     }
 
     void outputToFile(){
+        // IS matriks terdefinisi
+        // FS Matriks disalin ke sebuah file txt
         try{
             FileWriter writer = new FileWriter("hasil.txt"); 
             for (int b = 0; b < this.baris; b++){
@@ -302,6 +304,8 @@ public class Matriks{
     }
 
     void konfirmOutputkeFile(){
+        // IS Matriks terdefinisi
+        // FS Matriks disalin ke sebuah file txt atau tidak disalin
         char konfirm;
             do{
                 System.out.print("Apakah Anda ingin menyimpan hasil ke sebuah file? (y/n)\n->");
@@ -364,10 +368,28 @@ public class Matriks{
     /* PROSEDUR INVERS DENGAN ADJOIN */
     void inversMatriksAdj(Matriks self){
         // buat matriks adjoin
-        Matriks adj = new Matriks(1, 1);
-        adj = FungsiDeterminan.cofactor(self); // Buat cofactor dari matriks awal
-        adj = transpose(adj); // transpose cofactor jadi adjoin
-        adj.displayMatriks(); // buat ngecek
+        Matriks kofaktor = new Matriks(self.Baris(), self.Kolom());
+        Matriks adj = new Matriks(self.Baris(), self.Kolom());
+        kofaktor.cofactor(self); // Buat cofactor dari matriks awal
+        adj = transpose(kofaktor); // transpose cofactor jadi adjoin
+        // Cari determinan pake reduksi obe
+        double det = 0;
+        for(int k = 0;k < kofaktor.Kolom();k++){
+            det += (kofaktor.Isi(0, k) * self.Isi(0, k));
+        }
+        //Cek apakah determinan = 0
+        if (det == 0){
+            System.out.println("Matriks tidak memiliki balikan! Determinan matriks = 0.");
+        } else {
+            // Invers adalah 1/det dikali adj[b][k]
+            for (int b = 0; b < this.baris; b++){
+                for (int k = 0; k < this.kolom; k++){
+                    this.isi[b][k] = (1/det) * adj.Isi(b, k);
+                }
+            }
+            System.out.println("Matriks balikannya adalah");
+            this.displayMatriks();
+        }
     }
 
     /* PROSEDUR UNTUK MENDAPATKAN DETERMINAN DENGAN CARA OBE */
@@ -426,8 +448,15 @@ public class Matriks{
                 for(int bk = 0;bk < temp.Baris();bk++){
                     nilai = nilai* temp.Isi(bk, bk);
                 }
-                if(b+k % 2 != 0){
-                    nilai = nilai* -1;
+                // cek kalo indeks barisnya genap, berarti + dimulai dari kolom 0(genap) (mulai dari 0)
+                if(b % 2 == 0){
+                    if (k % 2 != 0){
+                        nilai = nilai* -1;
+                    } else{}
+                } else { //kalo indeks barisnya ganjil, berarti + dimulai dari kolom 1(ganjil)
+                    if (k % 2 == 0){
+                        nilai = nilai* -1;
+                    } else{}
                 }
                 this.isi[b][k] = nilai;
             }

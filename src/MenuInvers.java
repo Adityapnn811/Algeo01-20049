@@ -33,6 +33,7 @@ public class MenuInvers {
         } else if (pilihanInputMatriks == 2) {
             System.out.println("Masukkan nama file yang akan dibaca: ");
             String namaFile = sc.nextLine();
+            m = new Matriks(Matriks.FileRow(namaFile), Matriks.FileColumn(namaFile));
             m.ReadMatriksFromFile(namaFile);
             if (pilihan == 1) {
                 m.inversMatriksOBE();
