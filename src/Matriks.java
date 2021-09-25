@@ -1,6 +1,5 @@
 import java.util.*;
 import java.lang.Math;
-import java.nio.file.Path;
 import java.io.File;  // Import the File class
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.io.FileWriter;
