@@ -42,20 +42,27 @@ public class MenuInterpolasi {
 
         m.OBEGaussJordan(m.Baris(), m.Kolom());
 
+        String line = "";
         System.out.print("p(x) = ");
+        line += "p(x) = ";
         double temp = 0;
         for(int b = 0;b< m.Baris();b++){
             temp = m.Isi(b, m.Kolom() - 1);
             if(temp != 0){
                 System.out.format("%.2f",temp);
+                line += temp;
                 if( b != 0){
                     System.out.format("*x^(%d)", b);
+                    line += "*x^" + b;
                 }
                 if(b< m.Baris()-1){
                     System.out.print(" + ");
+                    line += " + ";
                 }
             }
         }
         System.out.println("");
+        line += "";
+        m.konfirmOutputkeFile(4, 0, line);
     }
 }

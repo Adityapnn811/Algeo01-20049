@@ -24,23 +24,32 @@ public class MenuInvers {
             m = new Matriks(b, b);
             System.out.println("Input isi matriks");
             m.isiMatriks();
-            if (pilihan == 1) {
-                m.inversMatriksOBE();
-            } else if(pilihan == 2){
-                m.inversMatriksAdj(m);
+            if (m.Baris() == m.Kolom()){
+                if (pilihan == 1) {
+                    m.inversMatriksOBE();
+                } else if(pilihan == 2){
+                    m.inversMatriksAdj(m);
+                }
+                m.konfirmOutputkeFile(3, 0, "dummy");
+            } else {
+                System.out.println("Matriks tidak berbentuk square sehingga tidak memiliki balikan.");
             }
-            m.konfirmOutputkeFile();
+            
         } else if (pilihanInputMatriks == 2) {
             System.out.println("Masukkan nama file yang akan dibaca: ");
             String namaFile = sc.nextLine();
             m = new Matriks(Matriks.FileRow(namaFile), Matriks.FileColumn(namaFile));
             m.ReadMatriksFromFile(namaFile);
-            if (pilihan == 1) {
-                m.inversMatriksOBE();
-            } else if(pilihan == 2){
-                m.inversMatriksAdj(m);
+            if (m.Baris() == m.Kolom()){
+                if (pilihan == 1) {
+                    m.inversMatriksOBE();
+                } else if(pilihan == 2){
+                    m.inversMatriksAdj(m);
+                }
+                m.konfirmOutputkeFile(3, 0, "dummy");
+            } else {
+                System.out.println("Matriks tidak berbentuk square sehingga tidak memiliki balikan.");
             }
-            m.konfirmOutputkeFile();
         }
     }
 }

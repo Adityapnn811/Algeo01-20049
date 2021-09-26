@@ -111,6 +111,21 @@ public class Matriks{
         return temp;
     }
 
+    // Fungsi perkalian matriks
+    static Matriks perkalianMatriks(Matriks m1, Matriks m2){
+        Matriks hasil = new Matriks(m1.Baris(), m2.Kolom());
+        for (int b = 0; b < m1.Baris(); b++){
+            for (int k = 0; k < m2.Kolom(); k++){
+                double sum = 0;
+                for (int j = 0; j < m2.Baris(); j++){
+                    sum += m1.Isi(b, j) * m2.Isi(j, k);
+                }
+                hasil.ubahIsi(b, k, sum);
+            }
+        }
+        return hasil;
+    }
+
     /* *** PROSEDUR OBE *** */
     // GAUSS
     void OBEGauss(int b, int k){
@@ -289,29 +304,55 @@ public class Matriks{
         }
     }
 
-    void outputToFile(){
+    void outputToFile(int tipePersoalan, double det, String line){
         // IS matriks terdefinisi
-        // FS Matriks disalin ke sebuah file txt
-        try{
-            FileWriter writer = new FileWriter("hasil.txt"); 
-            for (int b = 0; b < this.baris; b++){
-                for (int k = 0; k < this.kolom; k++) {
-                    writer.write(Float.toString((float) this.isi[b][k]));
-                    if (k != this.kolom - 1){
-                        writer.write(" ");
+        // FS Matriks disalin ke sebuah file txt dengan luaran sesuai spesifikasi persoalan
+        // 1 = SPL, 2 = Determinan, 3 = Invers, 4 = Interpolasi, 5 = Regresi
+        System.out.print("Masukkan nama file (tanpa .txt dan jangan gunakan spasi): ");
+        String filename = sc.next();
+        if (tipePersoalan == 3){
+            try{
+                FileWriter writer = new FileWriter(filename + ".txt");
+                writer.write("Matriks balikannya adalah\n");
+                for (int b = 0; b < this.baris; b++){
+                    for (int k = 0; k < this.kolom; k++) {
+                        writer.write(Float.toString((float) this.isi[b][k]));
+                        if (k != this.kolom - 1){
+                            writer.write(" ");
+                        }
                     }
+                    writer.write("\n");
                 }
-                writer.write("\n");
+                System.out.println("File berhasil disimpan di " + filename + ".txt");
+                writer.close();
+            } catch (IOException e){
+                System.out.println("Terjadi sebuah error");
+                e.printStackTrace();
             }
-            System.out.println("File berhasil disimpan di hasil.txt");
-            writer.close();
-        } catch (IOException e){
-            System.out.println("Terjadi sebuah error");
-            e.printStackTrace();
+        } else if (tipePersoalan == 2) {
+            try{
+                FileWriter writer = new FileWriter(filename + ".txt");
+                writer.write("Determinan matriks adalah " + Double.toString(det));
+                System.out.println("File berhasil disimpan di " + filename + ".txt");
+                writer.close();
+            } catch (IOException e){
+                System.out.println("Terjadi sebuah error");
+                e.printStackTrace();
+            }   
+        } else if(tipePersoalan == 4){
+            try{
+                FileWriter writer = new FileWriter(filename + ".txt");
+                writer.write(line);
+                System.out.println("File berhasil disimpan di " + filename + ".txt");
+                writer.close();
+            } catch (IOException e){
+                System.out.println("Terjadi sebuah error");
+                e.printStackTrace();
+            }   
         }
     }
 
-    void konfirmOutputkeFile(){
+    void konfirmOutputkeFile(int tipePersoalan, double det, String line){
         // IS Matriks terdefinisi
         // FS Matriks disalin ke sebuah file txt atau tidak disalin
         char konfirm;
@@ -323,7 +364,7 @@ public class Matriks{
                 }
             } while (konfirm != 'y' && konfirm != 'n');
             if (konfirm == 'y'){
-                this.outputToFile();
+                this.outputToFile(tipePersoalan, det, line);
             }
     }
 
@@ -482,5 +523,74 @@ public class Matriks{
                 this.isi[b][k] = nilai;
             }
         }
+    }
+
+    /* *** REGRESI LINIER BERGANDA *** */
+    void regresiLinierBerganda(){
+        // IS matriks terdefinisi
+        // FS terbentuk solusi regresi linier berganda dari matriks
+        // nilai baris di sini = nilai sampel
+        int baris = this.baris; int kolom = this.kolom;
+        double jml;
+        Matriks X = new Matriks(baris, kolom - 1);
+        Matriks XT = new Matriks(kolom - 1, baris);
+        Matriks Y = new Matriks(baris, 1);
+        Matriks XTX = new Matriks(baris, kolom);
+        Matriks XTY = new Matriks(baris, 1);
+        // Isi matriks X dengan matriks this, tanpa kolom terakhir
+        for (int b = 0; b < baris; b++){
+            for (int k = 0; k < (kolom - 1); k++){
+                X.ubahIsi(b, k, this.isi[b][k]);
+            }
+        }
+        // Isi matriks Y dengan indeks kolom = kolom -1
+        for (int b = 0; b < baris; b++){
+            Y.ubahIsi(b, 0, this.isi[b][kolom - 1]);
+        }
+        // Transpose matriks X
+        XT = transpose(X);
+        // Kali XT dengan X dan Y
+        XTX = perkalianMatriks(XT, X);
+        XTY = perkalianMatriks(XT, Y);
+        // ubah ukuran matriks this ke (peubah_x + 1 x peubah_x + 1 ditambah kolom Y) dan alokasi memori matriks baru
+        this.ubahBaris(kolom);
+        this.ubahKolom(kolom + 1);
+        this.isi = new double[this.baris][this.kolom];
+        // Ubah isi matriks this yg ukurannya udah diubah
+        for (int b = 0; b < this.baris; b++){
+            for (int k = 0; k < this.kolom; k++){
+                // Cek apabila b = 0 dan k = 0, maka isinya adalah jumlah sampel, dimana jumlah sampel = baris matriks sebelum diubah
+                if (b == 0 && k == 0) {
+                    this.isi[b][k] = baris;
+                } else if (b == 0 && k != 0 && k != this.kolom-1){ // Cek apabila b = 0 dan k != 0 dan k != kolom - 1, maka diisi jumlah X ke-n dan n = k - 1
+                    jml = 0;
+                    for (int i = 0; i < X.Baris(); i++){
+                        jml += X.Isi(i, k - 1);
+                    }
+                    this.isi[b][k] = jml;
+                } else if (k == 0 && b != 0 && k != this.kolom-1){ // Cek apabila k = 0 dan b != 0 dan k != kolom - 1, maka diisi jumlah X ke-n dan n = k - 1
+                    jml = 0;
+                    for (int i = 0; i < X.Baris(); i++){
+                        jml += X.Isi(i, b - 1);
+                    }
+                    this.isi[b][k] = jml;
+                } else if (k == this.kolom - 1){ // Cek apabila indeks k = kolom terakhir
+                    // Cek apabila b = 0
+                    if (b == 0){
+                        jml = 0;
+                        for (int i = 0; i < Y.Baris(); i++){
+                            jml += Y.Isi(i, 0);
+                        }
+                        this.isi[b][k] = jml;
+                    } else { // Selaim b = 0
+                        this.isi[b][k] = XTY.Isi(b - 1, 0);
+                    }
+                } else {
+                    this.isi[b][k] = XTX.Isi(b-1, k-1);
+                }
+            }
+        }
+        // Lakukan gauss-Jordan pada matriks
+        this.OBEGauss(this.baris, this.kolom);
     }
 }

@@ -37,7 +37,7 @@ public class Main{
             }
             else if(pilihan == 5){
                 System.out.println("===== MENU Regresi Linear Berganda =====");
-                //pindah ke menu regresi linear berganda
+                MenuRLB.submenuRLB();
             }
             else if(pilihan == 6){
                 System.out.println("thank you for staying here with us. It was indeed fun. see you later!");
