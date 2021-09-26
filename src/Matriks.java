@@ -145,6 +145,9 @@ public class Matriks{
                             this.isi[i][k_pass] = 0;
                             for (int j = k_pass + 1; j < k; j++){
                                 this.isi[i][j] -= this.Isi(b_pass, j) * pengali;
+                                if (this.isi[i][j] == -0.0){ // Menghilangkan -0
+                                    this.isi[i][j] = Math.abs(-0.0);
+                                }
                             }       
                         }
                     }
@@ -181,6 +184,9 @@ public class Matriks{
                         this.isi[i][k_pass] = 0;
                         for (int j = k_pass + 1; j < k; j++){
                             this.isi[i][j] -= this.Isi(b_pass, j) * pengali;
+                            if (this.isi[i][j] == -0.0){
+                                this.isi[i][j] = Math.abs(-0.0);
+                            } //menghilangkan -0
                         }       
                     }
                 }
@@ -206,6 +212,9 @@ public class Matriks{
     //FS ditampilkan dilayar isi dari matriks this.
         for (int i = 0; i < this.baris; i++){
             for (int j = 0; j < this.kolom; j++) {
+                if (this.isi[i][j] == -0.0){ // Menghilangkan -0
+                    this.isi[i][j] = Math.abs(-0.0);
+                }
                 System.out.printf("%.3f ", this.isi[i][j]);
             }
             System.out.println();
@@ -338,6 +347,9 @@ public class Matriks{
                 }
             }
         }
+        // Tampilin matriks identitasnya
+        System.out.println("\nBeri matriks identitas dengan ukuran yang sama seperti matriks, menjadi");
+        mTemp.displayMatriks();
         // Lakukan OBE
         mTemp.OBEGaussJordan(mTemp.Baris(), mTemp.Kolom());
         //Cek apakah ada baris yg 0 semua
@@ -347,6 +359,9 @@ public class Matriks{
             adaBarisNol = mTemp.semuaBarisNol(mTemp.Baris() - 1, mTemp.Kolom()/2);
             l += 1;
         }
+        // Tampilin matriks mTemp setelah dilakukan OBE
+        System.out.println("\nDengan melakukan OBE Gauss Jordan, kita dapatkan");
+        mTemp.displayMatriks();
         if (!adaBarisNol){
             // Pindah matriks yg sebelah kanan identitas
             for (int i = 0; i < this.baris; i++){
@@ -357,10 +372,10 @@ public class Matriks{
                     }
                 }
             }
-            System.out.println("Matriks balikannya adalah");
+            System.out.println("\nMatriks balikannya adalah");
             this.displayMatriks();
         } else{
-            System.out.println("Matriks tidak memiliki balikan!");
+            System.out.println("\nKarena tidak terbentuk matriks identitas di ruas kiri, maka matriks tidak memiliki balikan");
         }
     }
 
@@ -371,14 +386,20 @@ public class Matriks{
         Matriks adj = new Matriks(self.Baris(), self.Kolom());
         kofaktor.cofactor(self); // Buat cofactor dari matriks awal
         adj = transpose(kofaktor); // transpose cofactor jadi adjoin
+        // Tampilin kofaktor
+        System.out.println("\nKita buat kofaktor dari matriks, kita dapatkan kofaktornya, yaitu");
+        kofaktor.displayMatriks();
+        System.out.println("\nKita transpose kofaktor sehingga kita dapatkan adjoin dari matriks, yaitu");
+        adj.displayMatriks();
         // Cari determinan pake reduksi obe
         double det = 0;
         for(int k = 0;k < kofaktor.Kolom();k++){
             det += (kofaktor.Isi(0, k) * self.Isi(0, k));
         }
+        System.out.println("\nDari matriks kofaktor kita dapatkan determinan matriks, yaitu " + det);
         //Cek apakah determinan = 0
         if (det == 0){
-            System.out.println("Matriks tidak memiliki balikan! Determinan matriks = 0.");
+            System.out.println("Karena determinan matriks 0, matriks tidak memiliki balikan.");
         } else {
             // Invers adalah 1/det dikali adj[b][k]
             for (int b = 0; b < this.baris; b++){
@@ -386,6 +407,7 @@ public class Matriks{
                     this.isi[b][k] = (1/det) * adj.Isi(b, k);
                 }
             }
+            System.out.println("\nCari matriks balikannya dengan mengalikan 1/det dengan matriks kofaktor.");
             System.out.println("Matriks balikannya adalah");
             this.displayMatriks();
         }
