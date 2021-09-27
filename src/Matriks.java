@@ -603,4 +603,9 @@ public class Matriks{
         // Lakukan gauss-Jordan pada matriks
         this.OBEGauss(this.baris, this.kolom);
     }
+    
+    /* PROSEDUR SPL MATRIKS */
+    void splGauss(Matriks m){
+        
+    }
 }

@@ -10,7 +10,7 @@ public class MenuInterpolasi {
             System.out.print("masukkan nilai N, yaitu jumlah titik:\n");
             int n = Main.RobustIntInput(1, 10000);
             m = new Matriks(n, n+1);
-            System.out.format("masukkan nilai (x,y) sebanyak %dx:\n", n);
+            System.out.format("masukkan nilai (x,y) sebanyak %d kali:\n", n);
             for(int b = 0;b < n;b++){
                 Double x = 0.0;
                 Double y = 0.0;

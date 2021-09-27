@@ -33,7 +33,7 @@ public class MenuSPL {
 
             /* SPL */
 
-            m.konfirmOutputkeFile();
+            //m.konfirmOutputkeFile();
         } else if (pilihanInputMatriks == 2) {
             System.out.println("Masukkan nama file yang akan dibaca: ");
             String namaFile = sc.nextLine();
@@ -42,7 +42,7 @@ public class MenuSPL {
 
             /* SPL */
             
-            m.konfirmOutputkeFile();
+            //m.konfirmOutputkeFile();
         }
     }
 }
