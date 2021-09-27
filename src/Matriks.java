@@ -349,6 +349,16 @@ public class Matriks{
                 System.out.println("Terjadi sebuah error");
                 e.printStackTrace();
             }   
+        } else if(tipePersoalan == 5){
+            try{
+                FileWriter writer = new FileWriter(filename + ".txt");
+                writer.write(line);
+                System.out.println("File berhasil disimpan di " + filename + ".txt");
+                writer.close();
+            } catch (IOException e){
+                System.out.println("Terjadi sebuah error");
+                e.printStackTrace();
+            }   
         }
     }
 
