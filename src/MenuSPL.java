@@ -19,7 +19,7 @@ public class MenuSPL {
         int b,k;
         Matriks m;
         // input dari console
-        if (pilihanInputMatriks == 1){
+        if (pilihanInputMatriks == 1) {
             System.out.println("Masukkan matriks dalam bentuk augmented.");
             System.out.println("Input jumlah baris matriks:");
             System.out.print("->");
@@ -32,6 +32,9 @@ public class MenuSPL {
             m.isiMatriks();
 
             /* SPL */
+            if (pilihan == 1) {
+                m.splGauss();
+            }
 
             //m.konfirmOutputkeFile();
         } else if (pilihanInputMatriks == 2) {

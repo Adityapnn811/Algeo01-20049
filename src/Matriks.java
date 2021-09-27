@@ -605,7 +605,106 @@ public class Matriks{
     }
     
     /* PROSEDUR SPL MATRIKS */
-    void splGauss(Matriks m){
-        
+    void splGauss(){
+        this.OBEGauss(this.baris, this.kolom);
+        System.out.println("Matriks setelah dilakukan eliminasi Gauss:");
+        this.displayMatriks();
+
+        int i = this.baris-1;
+        int jumlahsol = 0;
+        int jumlahx = this.kolom-1;
+        boolean solusibanyak = false;
+        if (semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0) {
+            System.out.println("Tidak ada solusi");
+        } else {
+            while (semuaBarisNol(i, this.kolom)){
+                solusibanyak = true;
+                i--;
+            }
+            if (solusibanyak) {
+                jumlahsol += 1;
+                System.out.printf("Solusi ke-%d:\n", jumlahsol);
+                for (int x=1;x<=jumlahx;x++) {
+                    System.out.printf("x%d = 0.000; ", x);
+                }
+                System.out.println();
+            }
+
+            if (!(semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0)) {
+                
+
+                double solusix[] = new double[this.kolom-1];
+                for (int z = 0;z<this.kolom-1;z++) {
+                    solusix[z] = 999; //mark
+                }
+
+                if (i == this.kolom-2) { //solusi tidak parametrik
+                    // x pertama
+                    int ke_x = jumlahx-1;
+                    solusix[ke_x] = this.Isi(i, this.kolom-1);
+                    i--;
+
+                    // x lainnya
+                    for (int j=i;j>=0;j--) {
+                        while (this.Isi(j, ke_x) != 1 && ke_x>0) { ke_x -= 1; }
+                        int minus = 0;
+                        for (int k=ke_x+1;k<=this.kolom-2;k++) {
+                            minus += solusix[k]*this.Isi(j,k);
+                        }
+                        solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
+                    }
+                    
+                    // print solusi
+                    jumlahsol += 1;
+                    System.out.printf("Solusi ke-%d:\n", jumlahsol);
+                    for (int a=0;a<jumlahx;a++) {
+                        System.out.printf("x%d = %.3f; ", a+1,solusix[a]);
+                    }
+                    System.out.println();
+
+                } else { //solusi parametrik
+                    int ke_x = jumlahx-1;
+                    String minpar[] = new String[this.kolom-1];
+                    for (int z = 0;z<this.kolom-1;z++) {
+                        minpar[z] = ""; //mark
+                    }
+                    //while (this.Isi(i, ke_x) != 1 && ke_x>0) { ke_x -= 1; }
+                    for (int j=i;j>=0;j--) {
+                        ke_x = 0;
+                        while (this.Isi(j, ke_x) != 1 && ke_x<this.kolom-2) { ke_x += 1; }
+                        int minus = 0;
+
+                        int ke_a1 = 1;
+                        for (int k=ke_x+1;k<=this.kolom-2;k++) {
+                            if (solusix[k] == 999) {
+                                if (this.Isi(j,k) == 1) {
+                                    minpar[ke_x] = minpar[ke_x] + "-a" + ke_a1;
+                                } else {
+                                    minpar[ke_x] = minpar[ke_x] + "-" + String.format("%.3f", this.Isi(j,k)) + "a" + ke_a1;
+                                }
+                                ke_a1 += 1;
+                            } else {
+                                minus += solusix[k]*this.Isi(j,k);
+                            }
+                        }
+                        solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
+                    }
+
+                    // print solusi
+                    jumlahsol += 1;
+                    int ke_a = 1;
+                    System.out.printf("Solusi ke-%d (parametrik):\n", jumlahsol);
+                    for (int a=0;a<jumlahx;a++) {
+                        if (solusix[a] == 999) {
+                            System.out.printf("x%d = a%d; ", a+1,ke_a);
+                            ke_a += 1;
+                        } else {
+                            System.out.printf("x%d = %.3f%s; ", a+1,solusix[a],minpar[a]);
+                        }
+                    }
+                    System.out.println();
+                }
+            }   
+        }
     }
 }
