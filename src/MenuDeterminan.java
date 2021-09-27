@@ -55,7 +55,11 @@ public class MenuDeterminan{
                         }
                         hasil = hasil * m.Isi(b,b);
                     }
+                    if (hasil == -0.0){ // Menghilangkan -0
+                        hasil = Math.abs(-0.0);
+                    }
                     System.out.println(hasil);
+                    m.konfirmOutputkeFile(2, hasil, "dummy");
                 }
                 if(pilihan == 2){ //hitung dengan cofactor
                     Matriks mCof = new Matriks(m.Baris(), m.Kolom());
@@ -81,7 +85,11 @@ public class MenuDeterminan{
                             }
                             hasil = hasil + (mCof.Isi(bariske,k)*m.Isi(bariske, k));
                         }
+                        if (hasil == -0.0){ // Menghilangkan -0
+                            hasil = Math.abs(-0.0);
+                        }
                         System.out.println(hasil);
+                        m.konfirmOutputkeFile(2, hasil, "dummy");
                     }//pake baris end
                     if (pilihanbk == 2){ //pake kolom start
                         System.out.println("mau kolom ke berapa(mulai dari 0):");
@@ -100,7 +108,11 @@ public class MenuDeterminan{
                             }
                             hasil = hasil + (mCof.Isi(b,kolomke)*m.Isi(b, kolomke));
                         }
+                        if (hasil == -0.0){ // Menghilangkan -0
+                            hasil = Math.abs(-0.0);
+                        }
                         System.out.println(hasil);
+                        m.konfirmOutputkeFile(2, hasil, "dummy");
                     }//pake kolom end
                 }
             }

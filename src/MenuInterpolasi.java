@@ -42,20 +42,33 @@ public class MenuInterpolasi {
 
         m.OBEGaussJordan(m.Baris(), m.Kolom());
 
+        System.out.print("masukkan nilai x yang akan ditaksir nilainya\n->");
+        double x = sc.nextDouble();
+        System.out.println("hasil taksirannya adalah:");
+        double hasil = 0;
+        String line = "";
         System.out.print("p(x) = ");
+        line += "dengan nilai x = " + x + ",\np(x) = ";
         double temp = 0;
         for(int b = 0;b< m.Baris();b++){
             temp = m.Isi(b, m.Kolom() - 1);
             if(temp != 0){
                 System.out.format("%.2f",temp);
-                if( b != 0){
+                line += temp;
+                if( b != 0 && temp != 0){
                     System.out.format("*x^(%d)", b);
+                    line += "*x^" + b;
                 }
                 if(b< m.Baris()-1){
                     System.out.print(" + ");
+                    line += " + ";
                 }
             }
+            hasil = hasil + (m.Isi(b, b)*Math.pow(x, b));
         }
-        System.out.println("");
+        System.out.format("= %.2f\n", hasil);
+        line += " = " + hasil;
+
+        m.konfirmOutputkeFile(4, 0, line);
     }
 }
