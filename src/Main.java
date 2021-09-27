@@ -19,6 +19,7 @@ public class Main{
             if(pilihan == 1){
                 System.out.println("===== MENU SPL =====");
                 //pindah ke menu SPL
+                MenuSPL.submenuSPL();
             }
             else if(pilihan == 2){
                 //pindah ke menu Determinan

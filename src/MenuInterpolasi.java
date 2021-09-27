@@ -10,7 +10,7 @@ public class MenuInterpolasi {
             System.out.print("masukkan nilai N, yaitu jumlah titik:\n");
             int n = Main.RobustIntInput(1, 10000);
             m = new Matriks(n, n+1);
-            System.out.format("masukkan nilai (x,y) sebanyak %dx:\n", n);
+            System.out.format("masukkan nilai (x,y) sebanyak %d kali:\n", n);
             for(int b = 0;b < n;b++){
                 Double x = 0.0;
                 Double y = 0.0;
@@ -42,16 +42,20 @@ public class MenuInterpolasi {
 
         m.OBEGaussJordan(m.Baris(), m.Kolom());
 
+        System.out.print("masukkan nilai x yang akan ditaksir nilainya\n->");
+        double x = sc.nextDouble();
+        System.out.println("hasil taksirannya adalah:");
+        double hasil = 0;
         String line = "";
         System.out.print("p(x) = ");
-        line += "p(x) = ";
+        line += "dengan nilai x = " + x + ",\np(x) = ";
         double temp = 0;
         for(int b = 0;b< m.Baris();b++){
             temp = m.Isi(b, m.Kolom() - 1);
             if(temp != 0){
                 System.out.format("%.2f",temp);
                 line += temp;
-                if( b != 0){
+                if( b != 0 && temp != 0){
                     System.out.format("*x^(%d)", b);
                     line += "*x^" + b;
                 }
@@ -60,9 +64,11 @@ public class MenuInterpolasi {
                     line += " + ";
                 }
             }
+            hasil = hasil + (m.Isi(b, b)*Math.pow(x, b));
         }
-        System.out.println("");
-        line += "";
+        System.out.format("= %.2f\n", hasil);
+        line += " = " + hasil;
+
         m.konfirmOutputkeFile(4, 0, line);
     }
 }
