@@ -100,6 +100,20 @@ public class Matriks{
         return semuaNol;
     }
 
+    boolean semuaKolomNol(int lastIdxKolom, int jmlBaris){
+        // Menghasilkan true jika semua elemen pada kolom bernilai nol
+        boolean semuaNol = true;
+        int j = 0;
+        while (j < jmlBaris && semuaNol){
+            if (this.isi[j][lastIdxKolom] != 0){
+                semuaNol = false;
+            } else {
+                j++;
+            }
+        }
+        return semuaNol;
+    }
+
     // Fungsi transpose matriks
     static Matriks transpose(Matriks m){
         Matriks temp = new Matriks(m.kolom, m.baris);
@@ -606,105 +620,113 @@ public class Matriks{
     
     /* PROSEDUR SPL MATRIKS */
     void splGauss(){
+        /* KAMUS */
+        int i = this.baris-1;
+        int jumlahx = this.kolom-1;
+        double solusix[] = new double[this.kolom-1];
+        for (int z = 0;z<this.kolom-1;z++) {
+            solusix[z] = 999; //mark
+        }
+        boolean homogen = false;
+
+        /* ALGORITMA */
+
+        // eliminasi Gauss
         this.OBEGauss(this.baris, this.kolom);
         System.out.println("Matriks setelah dilakukan eliminasi Gauss:");
         this.displayMatriks();
 
-        int i = this.baris-1;
-        int jumlahsol = 0;
-        int jumlahx = this.kolom-1;
-        boolean solusibanyak = false;
-        if (semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0) {
-            System.out.println("Tidak ada solusi");
-        } else {
-            while (semuaBarisNol(i, this.kolom)){
-                solusibanyak = true;
-                i--;
+        // matriks homogen
+        if (semuaKolomNol(this.kolom-1, this.baris)) {
+            homogen = true;
+            System.out.println("SPL memiliki solusi trivial:");
+            for (int x=1;x<=jumlahx;x++) {
+                System.out.printf("x%d = 0.000; ", x);
             }
-            if (solusibanyak) {
-                jumlahsol += 1;
-                System.out.printf("Solusi ke-%d:\n", jumlahsol);
-                for (int x=1;x<=jumlahx;x++) {
-                    System.out.printf("x%d = 0.000; ", x);
+            System.out.println();
+        }
+
+        // drop baris yang isinya semua 0
+        while (semuaBarisNol(i, this.kolom)){
+            i--;
+        }
+
+        // matriks tidak memiliki solusi
+        if (semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0 && !homogen) {
+            System.out.println("SPL tidak memiliki solusi");
+        } 
+        // matriks memiliki solusi tunggal
+        else if (i == this.kolom-2){
+            // x pertama
+            int ke_x = jumlahx-1;
+            solusix[ke_x] = this.Isi(i, this.kolom-1);
+            i--;
+
+            // x lainnya
+            for (int j=i;j>=0;j--) {
+                int minus = 0;
+                for (int k=ke_x+1;k<=this.kolom-2;k++) {
+                    minus += solusix[k]*this.Isi(j,k);
                 }
-                System.out.println();
+                solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
             }
-
-            if (!(semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0)) {
-                
-
-                double solusix[] = new double[this.kolom-1];
+            
+            // print solusi
+            System.out.printf("SPL memiliki solusi tunggal:\n");
+            for (int a=0;a<jumlahx;a++) {
+                System.out.printf("x%d = %.3f; ", a+1,solusix[a]);
+            }
+            System.out.println();
+        } 
+        // solusi banyak/parametrik [!!! INI YANG BELOM JALAN - FELI]
+        else {
+            int ke_x = jumlahx-1;
+            double minpar[][] = new double[this.kolom-1][jumlahx];
+            /*for (int y = 0;y<this.kolom-1;y++) {
                 for (int z = 0;z<this.kolom-1;z++) {
-                    solusix[z] = 999; //mark
+                    minpar[y][z] = ""; //mark
                 }
+            }*/
+            for (int j=i;j>=0;j--) {
+                ke_x = 0;
+                while (this.Isi(j, ke_x) != 1 && ke_x<this.kolom-2) { ke_x += 1; }
+                int minus = 0;
 
-                if (i == this.kolom-2) { //solusi tidak parametrik
-                    // x pertama
-                    int ke_x = jumlahx-1;
-                    solusix[ke_x] = this.Isi(i, this.kolom-1);
-                    i--;
-
-                    // x lainnya
-                    for (int j=i;j>=0;j--) {
-                        while (this.Isi(j, ke_x) != 1 && ke_x>0) { ke_x -= 1; }
-                        int minus = 0;
-                        for (int k=ke_x+1;k<=this.kolom-2;k++) {
-                            minus += solusix[k]*this.Isi(j,k);
-                        }
-                        solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
+                int ke_a1 = 0;
+                for (int k=ke_x+1;k<=this.kolom-2;k++) {
+                    if (solusix[k] == 999) {
+                        minpar[ke_x][ke_a1] = this.Isi(j,k);
+                        ke_a1 += 1;
+                    } else {
+                        minus += solusix[k]*this.Isi(j,k);
+                        minpar[ke_x][ke_a1] += minpar[k][ke_a1]*this.Isi(j,k);
                     }
-                    
-                    // print solusi
-                    jumlahsol += 1;
-                    System.out.printf("Solusi ke-%d:\n", jumlahsol);
-                    for (int a=0;a<jumlahx;a++) {
-                        System.out.printf("x%d = %.3f; ", a+1,solusix[a]);
-                    }
-                    System.out.println();
-
-                } else { //solusi parametrik
-                    int ke_x = jumlahx-1;
-                    String minpar[] = new String[this.kolom-1];
-                    for (int z = 0;z<this.kolom-1;z++) {
-                        minpar[z] = ""; //mark
-                    }
-                    //while (this.Isi(i, ke_x) != 1 && ke_x>0) { ke_x -= 1; }
-                    for (int j=i;j>=0;j--) {
-                        ke_x = 0;
-                        while (this.Isi(j, ke_x) != 1 && ke_x<this.kolom-2) { ke_x += 1; }
-                        int minus = 0;
-
-                        int ke_a1 = 1;
-                        for (int k=ke_x+1;k<=this.kolom-2;k++) {
-                            if (solusix[k] == 999) {
-                                if (this.Isi(j,k) == 1) {
-                                    minpar[ke_x] = minpar[ke_x] + "-a" + ke_a1;
-                                } else {
-                                    minpar[ke_x] = minpar[ke_x] + "-" + String.format("%.3f", this.Isi(j,k)) + "a" + ke_a1;
-                                }
-                                ke_a1 += 1;
-                            } else {
-                                minus += solusix[k]*this.Isi(j,k);
-                            }
-                        }
-                        solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
-                    }
-
-                    // print solusi
-                    jumlahsol += 1;
-                    int ke_a = 1;
-                    System.out.printf("Solusi ke-%d (parametrik):\n", jumlahsol);
-                    for (int a=0;a<jumlahx;a++) {
-                        if (solusix[a] == 999) {
-                            System.out.printf("x%d = a%d; ", a+1,ke_a);
-                            ke_a += 1;
-                        } else {
-                            System.out.printf("x%d = %.3f%s; ", a+1,solusix[a],minpar[a]);
-                        }
-                    }
-                    System.out.println();
                 }
-            }   
+                solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
+            }
+
+            // print solusi
+            System.out.print(minpar);
+            int ke_a = 1;
+            System.out.println("SPL memiliki tak berhingga solusi:");
+            for (int a=0;a<jumlahx;a++) {
+                if (solusix[a] == 999) {
+                    System.out.printf("x%d = a%d; ", a+1,ke_a);
+                    ke_a += 1;
+                } else {
+                    for (int par=0;par<jumlahx;par++) {
+                        if (minpar[a][par] != 0) {
+                            System.out.printf("x%d = %s; ", a+1,minpar[a][par]);
+                        }
+                    }
+                    if (solusix[a] == 0) {
+                        System.out.printf("x%d = %s; ", a+1,minpar[a]);
+                    } else {
+                        System.out.printf("x%d = %.3f%s; ", a+1,solusix[a],minpar[a]);
+                    }
+                }
+            }
+            System.out.println();
         }
     }
 }
