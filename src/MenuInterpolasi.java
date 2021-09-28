@@ -64,10 +64,10 @@ public class MenuInterpolasi {
                     line += " + ";
                 }
             }
-            hasil = hasil + (m.Isi(b, b)*Math.pow(x, b));
+            hasil = hasil + (temp*Math.pow(x, b));
         }
         System.out.format("= %.2f\n", hasil);
-        line += " = " + hasil;
+        line += " = " + hasil + "\n";
 
         m.konfirmOutputkeFile(4, 0, line);
     }
