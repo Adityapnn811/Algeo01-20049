@@ -88,6 +88,7 @@ public class Matriks{
 
     boolean semuaBarisNol(int lastIdxBaris, int jmlKolom){
         // Menghasilkan true jika semua elemen pada baris bernilai nol
+        //lastidx baris adalah baris yang akan dicek, jmlKolom adalah panjang kolomnya, dihitung mulai dari kolom nol.
         boolean semuaNol = true;
         int j =0;
         while (j < jmlKolom && semuaNol){
@@ -637,6 +638,7 @@ public class Matriks{
         this.displayMatriks();
 
         // matriks homogen
+        System.out.println("checkpoint-2");
         if (semuaKolomNol(this.kolom-1, this.baris)) {
             homogen = true;
             System.out.println("SPL memiliki solusi trivial:");
@@ -645,18 +647,22 @@ public class Matriks{
             }
             System.out.println();
         }
+        System.out.println("checkpoint-1");
 
         // drop baris yang isinya semua 0
         while (semuaBarisNol(i, this.kolom)){
             i--;
         }
+        System.out.println("checkpoint0");
 
         // matriks tidak memiliki solusi
         if (semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0 && !homogen) {
+            System.out.println("checkpoint1");
             System.out.println("SPL tidak memiliki solusi");
         } 
         // matriks memiliki solusi tunggal
         else if (i == this.kolom-2){
+            System.out.println("checkpoint2");
             // x pertama
             int ke_x = jumlahx-1;
             solusix[ke_x] = this.Isi(i, this.kolom-1);
@@ -678,55 +684,112 @@ public class Matriks{
             }
             System.out.println();
         } 
-        // solusi banyak/parametrik [!!! INI YANG BELOM JALAN - FELI]
-        else {
-            int ke_x = jumlahx-1;
-            double minpar[][] = new double[this.kolom-1][jumlahx];
-            /*for (int y = 0;y<this.kolom-1;y++) {
-                for (int z = 0;z<this.kolom-1;z++) {
-                    minpar[y][z] = ""; //mark
-                }
-            }*/
-            for (int j=i;j>=0;j--) {
-                ke_x = 0;
-                while (this.Isi(j, ke_x) != 1 && ke_x<this.kolom-2) { ke_x += 1; }
-                int minus = 0;
 
-                int ke_a1 = 0;
-                for (int k=ke_x+1;k<=this.kolom-2;k++) {
-                    if (solusix[k] == 999) {
-                        minpar[ke_x][ke_a1] = this.Isi(j,k);
-                        ke_a1 += 1;
-                    } else {
-                        minus += solusix[k]*this.Isi(j,k);
-                        minpar[ke_x][ke_a1] += minpar[k][ke_a1]*this.Isi(j,k);
+
+        // solusi banyak/parametrik [!!! INI YANG BELOM JALAN - FELI]
+        else{
+            System.out.println("punya banyak solusi");
+            this.ubahBaris(i+1);
+            this.displayMatriks();
+            //PUNYA JEFFREY
+            //kita catet dulu, mana x yang mau dijadiin variabel, mana yang enggak
+            boolean haventFoundNumber = true;
+            boolean[] is_variabled = new boolean[this.kolom - 1];
+            for(int loop = 0;loop < this.kolom-1;loop++){ //initilize dulu, anggep semua harus dibikin variabel
+                is_variabled[loop] = true;
+            }
+            for(int b = 0;b< this.baris;b++){
+                haventFoundNumber = true;
+                for(int k = 0;k < this.kolom;k++){
+                    if(this.isi[b][k] != 0 && haventFoundNumber){
+                        haventFoundNumber = false;
+                        is_variabled[k] = false; //kalo dia itu yg pertama, dia gk perlu dibikin variabel
                     }
                 }
-                solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
             }
-
-            // print solusi
-            System.out.print(minpar);
-            int ke_a = 1;
-            System.out.println("SPL memiliki tak berhingga solusi:");
-            for (int a=0;a<jumlahx;a++) {
-                if (solusix[a] == 999) {
-                    System.out.printf("x%d = a%d; ", a+1,ke_a);
-                    ke_a += 1;
-                } else {
-                    for (int par=0;par<jumlahx;par++) {
-                        if (minpar[a][par] != 0) {
-                            System.out.printf("x%d = %s; ", a+1,minpar[a][par]);
+            //waktunya print
+            char temp = 'a';
+            System.out.println("misalkan,");
+            for(int b = 0;b<this.kolom -1;b++){
+                temp = 'a';
+                temp+= b;
+                if(is_variabled[b]){
+                    System.out.format("x(%d) = %c\n",b+1, temp);
+                }
+            }
+            System.out.println("hasilnya adalah,");
+            for(int b = 0;b <this.baris;b++){
+                for(int k = 0;k< this.kolom;k++){
+                    if(this.isi[b][k] != 0){
+                        if(k != this.kolom -1){//kalo dia bukan sisi augemented
+                        
+                            if(!(is_variabled[k])){
+                                System.out.format("x(%d) = ",k+1);
+                            }
+                            else{ //artinya dia variabel
+                                temp = 'a';
+                                temp += k;
+                                System.out.format("%.2f%c + ",(-1*this.isi[b][k]), temp);
+                            }
+                        }
+                        else{ //dia sisi augmented
+                            System.out.format("%.2f",this.isi[b][k]);
                         }
                     }
-                    if (solusix[a] == 0) {
-                        System.out.printf("x%d = %s; ", a+1,minpar[a]);
-                    } else {
-                        System.out.printf("x%d = %.3f%s; ", a+1,solusix[a],minpar[a]);
-                    }
                 }
+                System.out.println("");
             }
-            System.out.println();
-        }
+            //PUNYA FELI
+            // int ke_x = jumlahx-1;
+            // double minpar[][] = new double[this.kolom-1][jumlahx];
+            // /*for (int y = 0;y<this.kolom-1;y++) {
+            //     for (int z = 0;z<this.kolom-1;z++) {
+            //         minpar[y][z] = ""; //mark
+            //     }
+            // }*/
+            // for (int j=i;j>=0;j--) {
+            //     ke_x = 0;
+            //     while (this.Isi(j, ke_x) != 1 && ke_x<this.kolom-2){ 
+            //         ke_x += 1; 
+            //     }
+
+            //     int minus = 0;
+
+            //     int ke_a1 = 0;
+            //     for (int k=ke_x+1;k<=this.kolom-2;k++) {
+            //         if (solusix[k] == 999) {
+            //             minpar[ke_x][ke_a1] = this.Isi(j,k);
+            //             ke_a1 += 1;
+            //         } else {
+            //             minus += solusix[k]*this.Isi(j,k);
+            //             minpar[ke_x][ke_a1] += minpar[k][ke_a1]*this.Isi(j,k);
+            //         }
+            //     }
+            //     solusix[ke_x] = this.Isi(j, this.kolom-1) - minus;
+            // }
+
+            // // print solusi
+            // System.out.print(minpar);
+            // int ke_a = 1;
+            // System.out.println("SPL memiliki tak berhingga solusi:");
+            // for (int a=0;a<jumlahx;a++) {
+            //     if (solusix[a] == 999) {
+            //         System.out.printf("x%d = a%d; ", a+1,ke_a);
+            //         ke_a += 1;
+            //     } else {
+            //         for (int par=0;par<jumlahx;par++) {
+            //             if (minpar[a][par] != 0) {
+            //                 System.out.printf("x%d = %s; ", a+1,minpar[a][par]);
+            //             }
+            //         }
+            //         if (solusix[a] == 0) {
+            //             System.out.printf("x%d = %s; ", a+1,minpar[a]);
+            //         } else {
+            //             System.out.printf("x%d = %.3f%s; ", a+1,solusix[a],minpar[a]);
+            //         }
+            //     }
+            // }
+            // System.out.println();
+        }//end of else buat kasus parametrik
     }
 }
