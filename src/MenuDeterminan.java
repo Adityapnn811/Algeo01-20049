@@ -53,7 +53,7 @@ public class MenuDeterminan{
                         else{
                             System.out.print(" = ");
                         }
-                        hasil = hasil * m.Isi(b,b);
+                        hasil *= m.Isi(b,b);
                     }
                     if (hasil == -0.0){ // Menghilangkan -0
                         hasil = Math.abs(-0.0);
@@ -83,7 +83,7 @@ public class MenuDeterminan{
                             else{
                                 System.out.print(" = ");
                             }
-                            hasil = hasil + (mCof.Isi(bariske,k)*m.Isi(bariske, k));
+                            hasil += (mCof.Isi(bariske,k)*m.Isi(bariske, k));
                         }
                         if (hasil == -0.0){ // Menghilangkan -0
                             hasil = Math.abs(-0.0);

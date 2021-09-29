@@ -855,20 +855,56 @@ public class Matriks{
 
     void splInvers() {
         /* KAMUS */
-        int jmltambah = 0;
+        double det = 1;
+        Matriks solusi;
+        Matriks reduksi;
+
         /* ALGORITMA */
+        if (this.Baris() != this.Kolom()-1) {
+            System.out.println("SPL tidak memiliki solusi tunggal");
+        } else {
+            // pisah matriks augmented menjadi 2 matriks (bentuk Ax=B)
+            Matriks hasil = new Matriks(this.Baris(), 1);
+            for (int i=0; i < hasil.Baris(); i++){
+                hasil.ubahIsi(i, 0, this.Isi(i, this.Kolom()-1));
+            }
+            this.kolom -= 1;
 
-        if (this.baris < this.kolom-1) {
-            jmltambah = this.kolom-1 - this.baris;
+            // cari determinan matriks
+            reduksi = copyMatriks(this);
+            reduksi.detReduksiOBE();
+            for (int i=0;i<reduksi.Baris();i++) {
+                det *= reduksi.Isi(i, i);
+            }
+
+            if (det == 0) {
+                System.out.println("SPL tidak memiliki solusi tunggal");
+            } else {
+                // invers matriks
+                Matriks kofaktor = new Matriks(this.Baris(), this.Kolom());
+                Matriks adj = new Matriks(this.Baris(), this.Kolom());
+                kofaktor.cofactor(this); // Buat cofactor dari matriks awal
+                adj = transpose(kofaktor); // transpose cofactor jadi adjoin
+                for (int b = 0; b < this.baris; b++){
+                    for (int k = 0; k < this.kolom; k++){
+                        this.isi[b][k] = (1/det) * adj.Isi(b, k);
+                    }
+                }
+                System.out.println("Matriks hasil invers adalah:");
+                this.displayMatriks();
+
+                // matriks invers * matriks hasil
+                solusi = perkalianMatriks(this, hasil);
+
+                // print solusi
+                System.out.println("SPL memiliki solusi:");
+                for (int i=0;i<solusi.Baris();i++) {
+                    System.out.printf("x%d = %.3f; ", i+1, solusi.Isi(i, 0));
+                }
+                System.out.println();
+            }
+            
         }
-        this.addBaris0(jmltambah);
-        this.displayMatriks();
- 
-        // pisah matriks augmented menjadi 2 matriks (bentuk Ax=B)
-
-
-        // invers matriks
-
     }
 
     void splCramer() {
