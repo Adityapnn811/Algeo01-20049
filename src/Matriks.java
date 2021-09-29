@@ -54,7 +54,7 @@ public class Matriks{
         Matriks mOut = new Matriks(mIn.Baris(), mIn.Kolom());
         for (int i = 0; i < mOut.Baris(); i++){
             for (int j = 0; j < mOut.Kolom(); j++){
-                ubahIsi(i, j, mIn.Isi(i, j));
+                mOut.ubahIsi(i, j, mIn.Isi(i, j));
             }
         }
         return mOut;
@@ -837,7 +837,37 @@ public class Matriks{
         }
     }
 
+    void addBaris0(int jml) {
+        // IS Matriks this terdefinisi
+        // FS Matriks this ditambahkan 1 baris berisi 0 0 0 ... di baris terakhir
+        Matriks mcopy = new Matriks(this.baris, this.kolom);
+        
+        mcopy = copyMatriks(this);
+        this.baris += jml;
+        this.isi = new double[this.baris][this.kolom];
+
+        for (int i=0; i < mcopy.Baris(); i++){
+            for (int j = 0; j < mcopy.Kolom(); j++){
+                this.ubahIsi(i, j, mcopy.Isi(i, j));
+            }
+        }
+    }
+
     void splInvers() {
+        /* KAMUS */
+        int jmltambah = 0;
+        /* ALGORITMA */
+
+        if (this.baris < this.kolom-1) {
+            jmltambah = this.kolom-1 - this.baris;
+        }
+        this.addBaris0(jmltambah);
+        this.displayMatriks();
+ 
+        // pisah matriks augmented menjadi 2 matriks (bentuk Ax=B)
+
+
+        // invers matriks
 
     }
 
