@@ -858,13 +858,14 @@ public class Matriks{
         double det = 1;
         Matriks solusi;
         Matriks reduksi;
+        int jumlahx = this.Kolom()-1;
+        Matriks hasil = new Matriks(this.Baris(), 1);
 
         /* ALGORITMA */
-        if (this.Baris() != this.Kolom()-1) {
+        if (this.Baris() != jumlahx) {
             System.out.println("SPL tidak memiliki solusi tunggal");
         } else {
             // pisah matriks augmented menjadi 2 matriks (bentuk Ax=B)
-            Matriks hasil = new Matriks(this.Baris(), 1);
             for (int i=0; i < hasil.Baris(); i++){
                 hasil.ubahIsi(i, 0, this.Isi(i, this.Kolom()-1));
             }
@@ -908,6 +909,64 @@ public class Matriks{
     }
 
     void splCramer() {
-        
+        /* KAMUS */
+        double detMatriks;
+        int jumlahx = this.Kolom()-1;
+        double dets[] = new double[jumlahx];
+        Matriks hasil = new Matriks(this.Baris(), 1);
+        Matriks temp;
+
+        /* ALGORITMA */
+        if (this.Baris() != jumlahx) {
+            System.out.println("SPL tidak memiliki solusi tunggal");
+        } else {
+            // pisah matriks augmented menjadi 2 matriks (bentuk Ax=B)
+            for (int i=0; i<hasil.Baris(); i++){
+                hasil.ubahIsi(i, 0, this.Isi(i, this.Kolom()-1));
+            }
+            this.kolom -= 1;
+
+            // cari determinan matriks
+            detMatriks = det(this);
+
+            if (detMatriks == 0) {
+                System.out.println("SPL tidak memiliki solusi tunggal");
+            } else {
+                // cari determinan x1, x2, x3,...
+                for (int i=0; i<this.Kolom(); i++) { // iterasi kolom
+                    temp = copyMatriks(this);
+                    for (int j=0; j<this.Baris(); j++) { // iterasi baris
+                        temp.ubahIsi(j, i, hasil.Isi(j, 0));
+                    }
+                    dets[i] = det(temp);
+                }
+
+                // print solusi
+                System.out.printf("Determinan matriks utama = %.3f\nDeterminan x:\n", detMatriks);
+                for (int i=0; i<jumlahx; i++) {
+                    System.out.printf("Dx%d = %.3f; ", i+1, dets[i]);
+                }
+                System.out.println("\nSolusi SPL dapat dihitung dengan cara membagi determinan x ke-x dengan determinan utama. Maka,");
+                for (int i=0; i<jumlahx; i++) {
+                    System.out.printf("x%d = %.3f; ", i+1, (dets[i]/detMatriks));
+                }
+                System.out.println();
+            }
+        }    
+    }
+
+    double det(Matriks m) {
+        // Fungsi menerima matriks m terdefinisi dan merupakan matriks persegi
+        // Fungsi mengeluarkan determinan matriks menggunakan cara reduksi tanpa mengubah matriks masukan
+        /* KAMUS */
+        double det = 1;
+        Matriks reduksi;
+        /* ALGORITMA */
+        reduksi = copyMatriks(m);
+        reduksi.detReduksiOBE();
+        for (int i=0;i<reduksi.Baris();i++) {
+            det *= reduksi.Isi(i, i);
+        }    
+        return det;
     }
 }
