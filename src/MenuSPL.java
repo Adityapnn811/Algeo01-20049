@@ -44,7 +44,9 @@ public class MenuSPL {
             m.ReadMatriksFromFile(namaFile);
 
             /* SPL */
-            
+            if (pilihan == 1) {
+                m.splGauss();
+            }
             //m.konfirmOutputkeFile();
         }
     }
