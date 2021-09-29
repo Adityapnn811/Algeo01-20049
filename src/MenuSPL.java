@@ -34,6 +34,12 @@ public class MenuSPL {
             /* SPL */
             if (pilihan == 1) {
                 m.splGauss();
+            } else if (pilihan == 2) {
+                m.splGaussJordan();
+            } else if (pilihan == 3) {
+                m.splInvers();
+            } else if (pilihan == 4) {
+                m.splCramer();
             }
 
             //m.konfirmOutputkeFile();
