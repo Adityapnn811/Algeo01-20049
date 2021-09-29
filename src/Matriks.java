@@ -325,7 +325,27 @@ public class Matriks{
         // 1 = SPL, 2 = Determinan, 3 = Invers, 4 = Interpolasi, 5 = Regresi
         System.out.print("Masukkan nama file (tanpa .txt dan jangan gunakan spasi): ");
         String filename = sc.next();
-        if (tipePersoalan == 3){
+        if (tipePersoalan == 1) {
+            try{
+                FileWriter writer = new FileWriter(filename + ".txt");
+                writer.write("Jawaban SPL: " + Double.toString(det));
+                System.out.println("File berhasil disimpan di " + filename + ".txt");
+                writer.close();
+            } catch (IOException e){
+                System.out.println("Terjadi sebuah error");
+                e.printStackTrace();
+            }  
+        } else if (tipePersoalan == 2) {
+            try{
+                FileWriter writer = new FileWriter(filename + ".txt");
+                writer.write("Determinan matriks adalah " + Double.toString(det));
+                System.out.println("File berhasil disimpan di " + filename + ".txt");
+                writer.close();
+            } catch (IOException e){
+                System.out.println("Terjadi sebuah error");
+                e.printStackTrace();
+            }  
+        } else if (tipePersoalan == 3){
             try{
                 FileWriter writer = new FileWriter(filename + ".txt");
                 writer.write("Matriks balikannya adalah\n");
@@ -343,17 +363,7 @@ public class Matriks{
             } catch (IOException e){
                 System.out.println("Terjadi sebuah error");
                 e.printStackTrace();
-            }
-        } else if (tipePersoalan == 2) {
-            try{
-                FileWriter writer = new FileWriter(filename + ".txt");
-                writer.write("Determinan matriks adalah " + Double.toString(det));
-                System.out.println("File berhasil disimpan di " + filename + ".txt");
-                writer.close();
-            } catch (IOException e){
-                System.out.println("Terjadi sebuah error");
-                e.printStackTrace();
-            }   
+            }  
         } else if(tipePersoalan == 4){
             try{
                 FileWriter writer = new FileWriter(filename + ".txt");
@@ -620,12 +630,16 @@ public class Matriks{
     }
     
     /* PROSEDUR SPL MATRIKS */
+    boolean isMatriksHomogen() {
+        return (semuaKolomNol(this.kolom-1, this.baris));
+    }
+    
     void splGauss(){
         /* KAMUS */
         int i = this.baris-1;
         int jumlahx = this.kolom-1;
         double solusix[] = new double[this.kolom-1];
-        boolean homogen = false;
+        boolean homogen = this.isMatriksHomogen();
 
         /* ALGORITMA */
 
@@ -635,8 +649,7 @@ public class Matriks{
         this.displayMatriks();
 
         // matriks homogen
-        if (semuaKolomNol(this.kolom-1, this.baris)) {
-            homogen = true;
+        if (homogen) {
             System.out.println("SPL memiliki solusi trivial:");
             for (int x=1;x<=jumlahx;x++) {
                 System.out.printf("x%d = 0.000; ", x);
@@ -721,5 +734,114 @@ public class Matriks{
                 System.out.println();
             }
         }
+    }
+
+    void splGaussJordan() {
+        /* KAMUS */
+        int i = this.baris-1; // indeks matriks yang sedang diproses
+        int jumlahx = this.kolom-1;
+        double solusix[] = new double[this.kolom-1];
+        boolean homogen = this.isMatriksHomogen();
+
+        /* ALGORITMA */
+
+        // eliminasi Gauss-Jordan
+        this.OBEGaussJordan(this.baris, this.kolom);
+        System.out.println("Matriks setelah dilakukan eliminasi Gauss-Jordan:");
+        this.displayMatriks();
+
+        if (homogen) {
+            System.out.println("SPL memiliki solusi trivial:");
+            for (int x=1;x<=jumlahx;x++) {
+                System.out.printf("x%d = 0.000; ", x);
+            }
+            System.out.println();
+        }
+
+        // drop baris yang isinya semua 0
+        while (semuaBarisNol(i, this.kolom)){
+            i--;
+        }
+
+        // matriks tidak memiliki solusi
+        if (semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0 && !homogen) {
+            System.out.println("SPL tidak memiliki solusi");
+        } 
+        // matriks memiliki solusi tunggal
+        else if (i == this.kolom-2){
+            for (int j=i;j>=0;j--) {
+                double minus = 0;
+                for (int k=j+1;k<jumlahx;k++) {
+                    minus += solusix[k]*this.Isi(j,k);
+                }
+                solusix[j] = this.Isi(j, this.kolom-1) - minus;
+            }
+            
+            // print solusi
+            System.out.printf("SPL memiliki solusi tunggal:\n");
+            for (int a=0;a<jumlahx;a++) {
+                System.out.printf("x%d = %.3f; ", a+1,solusix[a]);
+            }
+            System.out.println();
+        }
+        // matriks memiliki tak hingga solusi
+        else{
+            // catat x yang mau dijadikan variabel
+            boolean haventFoundNumber = true;
+            boolean[] is_variabled = new boolean[this.kolom - 1];
+            for(int loop = 0;loop < this.kolom-1;loop++){ //initilize dulu, anggep semua harus dibikin variabel
+                is_variabled[loop] = true;
+            }
+            for(int b = 0;b< this.baris;b++){
+                haventFoundNumber = true;
+                for(int k = 0;k < this.kolom;k++){
+                    if(this.isi[b][k] != 0 && haventFoundNumber){
+                        haventFoundNumber = false;
+                        is_variabled[k] = false; //kalo dia itu yg pertama, dia gk perlu dibikin variabel
+                    }
+                }
+            }
+            // print solusi
+            System.out.printf("SPL memiliki tak hingga solusi:\n");
+            char temp = 'a';
+            System.out.println("Misalkan:");
+            for(int b = 0;b<this.kolom -1;b++){
+                temp = 'a';
+                temp += b;
+                if(is_variabled[b]){
+                    System.out.format("x%d = %c\n", b+1,temp);
+                }
+            }
+            System.out.println("Maka:");
+            for(int b = 0;b <this.baris;b++){
+                for(int k = 0;k< this.kolom;k++){
+                    if(this.isi[b][k] != 0){
+                        if(k != this.kolom -1){//kalo dia bukan sisi augemented
+                        
+                            if(!(is_variabled[k])){
+                                System.out.format("x%d = ",k+1);
+                            }
+                            else{ //artinya dia variabel
+                                temp = 'a';
+                                temp += k;
+                                System.out.format("%.3f%c + ",(-1*this.isi[b][k]), temp);
+                            }
+                        }
+                        else{ //dia sisi augmented
+                            System.out.format("%.3f",this.isi[b][k]);
+                        }
+                    }
+                }
+                System.out.println();
+            }
+        }
+    }
+
+    void splInvers() {
+
+    }
+
+    void splCramer() {
+        
     }
 }
