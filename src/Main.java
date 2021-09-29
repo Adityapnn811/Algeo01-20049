@@ -41,7 +41,7 @@ public class Main{
                 MenuRLB.submenuRLB();
             }
             else if(pilihan == 6){
-                System.out.println("thank you for staying here with us. It was indeed fun. see you later!");
+                System.out.println("Thank you for staying here with us. It was indeed fun. See you later!");
                 break;
             }
         }//end of while

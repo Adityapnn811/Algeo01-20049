@@ -636,7 +636,7 @@ public class Matriks{
     
     void splGauss(){
         /* KAMUS */
-        int i = this.baris-1;
+        int i = this.baris-1; // indeks matriks yang sedang diproses
         int jumlahx = this.kolom-1;
         double solusix[] = new double[this.kolom-1];
         boolean homogen = this.isMatriksHomogen();
@@ -740,7 +740,6 @@ public class Matriks{
         /* KAMUS */
         int i = this.baris-1; // indeks matriks yang sedang diproses
         int jumlahx = this.kolom-1;
-        double solusix[] = new double[this.kolom-1];
         boolean homogen = this.isMatriksHomogen();
 
         /* ALGORITMA */
@@ -750,6 +749,7 @@ public class Matriks{
         System.out.println("Matriks setelah dilakukan eliminasi Gauss-Jordan:");
         this.displayMatriks();
 
+        // matriks homogen
         if (homogen) {
             System.out.println("SPL memiliki solusi trivial:");
             for (int x=1;x<=jumlahx;x++) {
@@ -768,19 +768,11 @@ public class Matriks{
             System.out.println("SPL tidak memiliki solusi");
         } 
         // matriks memiliki solusi tunggal
-        else if (i == this.kolom-2){
-            for (int j=i;j>=0;j--) {
-                double minus = 0;
-                for (int k=j+1;k<jumlahx;k++) {
-                    minus += solusix[k]*this.Isi(j,k);
-                }
-                solusix[j] = this.Isi(j, this.kolom-1) - minus;
-            }
-            
+        else if (i == jumlahx-1) {        
             // print solusi
             System.out.printf("SPL memiliki solusi tunggal:\n");
-            for (int a=0;a<jumlahx;a++) {
-                System.out.printf("x%d = %.3f; ", a+1,solusix[a]);
+            for (int a=0; a<jumlahx; a++) {
+                System.out.printf("x%d = %.3f; ", a+1, this.Isi(a, this.Kolom()-1));
             }
             System.out.println();
         }
@@ -813,12 +805,11 @@ public class Matriks{
                 }
             }
             System.out.println("Maka:");
-            for(int b = 0;b <this.baris;b++){
-                for(int k = 0;k< this.kolom;k++){
+            for(int b = 0; b<this.baris; b++) {
+                for(int k = 0; k<this.kolom; k++) {
                     if(this.isi[b][k] != 0){
-                        if(k != this.kolom -1){//kalo dia bukan sisi augemented
-                        
-                            if(!(is_variabled[k])){
+                        if(k != this.kolom-1) { //kalo dia bukan sisi augemented
+                            if(!(is_variabled[k])) {
                                 System.out.format("x%d = ",k+1);
                             }
                             else{ //artinya dia variabel
@@ -826,30 +817,13 @@ public class Matriks{
                                 temp += k;
                                 System.out.format("%.3f%c + ",(-1*this.isi[b][k]), temp);
                             }
-                        }
-                        else{ //dia sisi augmented
+                        } else { //dia sisi augmented
                             System.out.format("%.3f",this.isi[b][k]);
                         }
                     }
                 }
                 System.out.println();
-            }
-        }
-    }
-
-    void addBaris0(int jml) {
-        // IS Matriks this terdefinisi
-        // FS Matriks this ditambahkan 1 baris berisi 0 0 0 ... di baris terakhir
-        Matriks mcopy = new Matriks(this.baris, this.kolom);
-        
-        mcopy = copyMatriks(this);
-        this.baris += jml;
-        this.isi = new double[this.baris][this.kolom];
-
-        for (int i=0; i < mcopy.Baris(); i++){
-            for (int j = 0; j < mcopy.Kolom(); j++){
-                this.ubahIsi(i, j, mcopy.Isi(i, j));
-            }
+            }            
         }
     }
 
