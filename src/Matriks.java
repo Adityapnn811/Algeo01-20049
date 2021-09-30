@@ -141,6 +141,31 @@ public class Matriks{
         return hasil;
     }
 
+    // Fungsi determinan matriks
+    double det(Matriks m) {
+        // Fungsi menerima matriks m terdefinisi dan merupakan matriks persegi
+        // Fungsi mengeluarkan determinan matriks menggunakan cara reduksi tanpa mengubah matriks masukan
+        /* KAMUS */
+        double det = 1;
+        Matriks reduksi;
+        /* ALGORITMA */
+        reduksi = copyMatriks(m);
+        reduksi.detReduksiOBE();
+        for (int i=0;i<reduksi.Baris();i++) {
+            det *= reduksi.Isi(i, i);
+        }    
+        return det;
+    }
+
+    // Fungsi menentukan matriks homogen
+    boolean isMatriksHomogen() {
+        // Fungsi mengeluarkan true bila matriks homogen dan false bila matriks tidak homogen
+        // Matriks homogen adalah matriks dengan kolom terakhir berisi semua 0
+        /* KAMUS */
+        /* ALGORITMA */
+        return (semuaKolomNol(this.Kolom()-1, this.Baris()));
+    }
+
     /* *** PROSEDUR OBE *** */
     // GAUSS
     void OBEGauss(int b, int k){
@@ -630,10 +655,8 @@ public class Matriks{
     }
     
     /* PROSEDUR SPL MATRIKS */
-    boolean isMatriksHomogen() {
-        return (semuaKolomNol(this.kolom-1, this.baris));
-    }
     
+    // Menggunakan cara Gauss
     void splGauss(){
         /* KAMUS */
         int i = this.baris-1; // indeks matriks yang sedang diproses
@@ -736,6 +759,7 @@ public class Matriks{
         }
     }
 
+    // Menggunakan cara Gauss-Jordan
     void splGaussJordan() {
         /* KAMUS */
         int i = this.baris-1; // indeks matriks yang sedang diproses
@@ -827,6 +851,7 @@ public class Matriks{
         }
     }
 
+    // Menggunakan matriks balikan
     void splInvers() {
         /* KAMUS */
         double det = 1;
@@ -882,6 +907,7 @@ public class Matriks{
         }
     }
 
+    // Kaidah Cramer
     void splCramer() {
         /* KAMUS */
         double detMatriks;
@@ -929,18 +955,4 @@ public class Matriks{
         }    
     }
 
-    double det(Matriks m) {
-        // Fungsi menerima matriks m terdefinisi dan merupakan matriks persegi
-        // Fungsi mengeluarkan determinan matriks menggunakan cara reduksi tanpa mengubah matriks masukan
-        /* KAMUS */
-        double det = 1;
-        Matriks reduksi;
-        /* ALGORITMA */
-        reduksi = copyMatriks(m);
-        reduksi.detReduksiOBE();
-        for (int i=0;i<reduksi.Baris();i++) {
-            det *= reduksi.Isi(i, i);
-        }    
-        return det;
-    }
 }
