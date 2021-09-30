@@ -46,7 +46,7 @@ public class MenuSPL {
             m.konfirmOutputkeFile(1,0,jwbakhir);
         } else if (pilihanInputMatriks == 2) {
             System.out.println("Masukkan nama file yang akan dibaca: ");
-            String namaFile = sc.nextLine();
+            String namaFile = Main.RobustFilenameInput();
             m = new Matriks(Matriks.FileRow(namaFile), Matriks.FileColumn(namaFile));
             m.ReadMatriksFromFile(namaFile);
 

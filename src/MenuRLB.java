@@ -21,7 +21,7 @@ public class MenuRLB {
             // m.displayMatriks(); // ngecek
         } else {
             System.out.println("Masukkan nama file yang akan dibaca: ");
-            String namaFile = sc.nextLine();
+            String namaFile = Main.RobustFilenameInput();
             int baris = Matriks.FileRow(namaFile);
             int kolom = Matriks.FileColumn(namaFile);
             peubah_x = kolom-1;

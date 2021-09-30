@@ -280,78 +280,72 @@ public class Matriks{
     public static int FileRow(String FileName){
         //mengembalikan jumlah kolom dari file dengan nama FileName. kalo filenya gk ketemu, return -1
         int lines = -1;
-        while(true){
-            try{
-                Scanner reader = new Scanner(new File(FileName));
-                lines = 0;
-                while (reader.hasNextLine()){
-                    reader.nextLine();
-                    lines++;
-                }
-                reader.close();
-                break;
+        try{
+            Scanner reader = new Scanner(new File(FileName));
+            lines = 0;
+            while (reader.hasNextLine()){
+                reader.nextLine();
+                lines++;
             }
-            catch (Exception e) {
-                sc.next();
-                System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo). masukin lgi");
-            }
+            reader.close();
+        }
+        catch (Exception e) {
+            sc.next();
+            System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo). masukin lgi");
         }
         return lines;
     }
         public static int FileColumn(String FileName){
             //mengembalikan jumlah baris dari suatu file dengan nama FileName. kalo filenya gk ketemu, return -1
             int kolom = -1;
-            while(true){
-                try{
-                    Scanner reader = new Scanner(new File(FileName));
-                    kolom = 1;
-                    String oneLine = reader.nextLine();
-                    for(int i = 0;i < oneLine.length();i++){
-                        if (oneLine.charAt(i) == ' ')
-                        kolom++;
-                    }
-                    reader.close();
-                    break;
+            try{
+                Scanner reader = new Scanner(new File(FileName));
+                kolom = 1;
+                String oneLine = reader.nextLine();
+                for(int i = 0;i < oneLine.length();i++){
+                    if (oneLine.charAt(i) == ' ')
+                    kolom++;
                 }
-                catch (Exception e) {
-                    sc.next();
-                    System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
-                }
+                reader.close();
+            
             }
+            catch (Exception e) {
+                sc.next();
+                System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
+            }
+    
             return kolom;
         }
             
     void ReadMatriksFromFile(String FileName){
         //IS matriks This terdefinisi, belum memiliki isi.
         //FS matriks sudah terisi sesuai dengan isi dari file FileName(pasti augmented)
-        while(true){
 
-            try {
-                int b = 0;
-                int k = 0;
-                // isi matriks
-                File myObj = new File(FileName);
-                Scanner myReader = new Scanner(myObj);
-                while (myReader.hasNextDouble()) {
-                    this.isi[b][k] = myReader.nextDouble();
-                    //next data in matriks
-                    if(k < this.kolom - 1){
-                        k++;
-                    }
-                    else{
-                        k = 0;
-                        b++;
-                    }
+        try {
+            int b = 0;
+            int k = 0;
+            // isi matriks
+            File myObj = new File(FileName);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextDouble()) {
+                this.isi[b][k] = myReader.nextDouble();
+                //next data in matriks
+                if(k < this.kolom - 1){
+                    k++;
                 }
-                myReader.close();
-                break;
-            } 
-            catch (Exception e) {
-                sc.next();
-                System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
+                else{
+                    k = 0;
+                    b++;
+                }
             }
+            myReader.close();
+        } 
+        catch (Exception e) {
+            sc.next();
+            System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
         }
     }
+
 
     void outputToFile(int tipePersoalan, double det, String line){
         // IS matriks terdefinisi

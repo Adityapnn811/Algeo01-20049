@@ -1,5 +1,9 @@
 import java.util.*;
-
+import java.io.File;
+import java.lang.Math;
+import java.io.FileNotFoundException;  // Import this class to handle errors
+import java.io.FileWriter;
+import java.io.IOException;
 public class Main{
     static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
@@ -70,5 +74,26 @@ public class Main{
             }
         }//end of while
         return pilihan;
+    }
+    public static String RobustFilenameInput(){
+        String filename = "";
+        System.out.print("->");
+        filename = sc.next();
+        while(true){
+            try{
+                // System.out.print("checkpoint");
+                Scanner reader = new Scanner(new File(filename)); //ngetes buat ngetrigger error
+                // System.out.print("checkpoint2");
+                
+                reader.close();
+                break;
+            }
+            catch(Exception e){
+                System.out.format("Error, mungkin file " + filename + " tidak ditemukan. jangan lupa sertakan extension. coba lagi\n");
+                System.out.print("->");
+                filename = sc.next();
+            }
+        }
+        return filename;
     }
 }

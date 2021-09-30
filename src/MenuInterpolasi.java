@@ -23,8 +23,8 @@ public class MenuInterpolasi {
             }
         }//end of pilihan 1
         else{
-            System.out.print("masukkan nama file\n->");
-            String filename = sc.nextLine();
+            System.out.print("masukkan nama file\n");
+            String filename = Main.RobustFilenameInput();
             int baris = Matriks.FileRow(filename);
             m = new Matriks(baris, baris + 1);
             Matriks mfile = new Matriks(baris, 2);

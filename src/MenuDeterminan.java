@@ -26,8 +26,8 @@ public class MenuDeterminan{
                 m.isiMatriks();
             }
             else{
-                System.out.print("masukkan nama file\n->");
-                String filename = sc.nextLine();
+                System.out.print("masukkan nama file");
+                String filename = Main.RobustFilenameInput();
                 int baris = Matriks.FileRow(filename);
                 int kolom = Matriks.FileColumn(filename);
                 m = new Matriks(baris, kolom);
