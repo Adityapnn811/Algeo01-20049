@@ -2,6 +2,8 @@ import java.util.*;
 public class MenuSPL {
     static Scanner sc = new Scanner(System.in);
     public static void submenuSPL(){
+        /* KAMUS */
+        String jwbakhir = "";
         int pilihan, pilihanInputMatriks;
         // input pilihan
         System.out.println("Pilih metode penyelesaian SPL:");
@@ -33,16 +35,15 @@ public class MenuSPL {
 
             /* SPL */
             if (pilihan == 1) {
-                m.splGauss();
+                jwbakhir = m.splGauss();
             } else if (pilihan == 2) {
-                m.splGaussJordan();
+                jwbakhir = m.splGaussJordan();
             } else if (pilihan == 3) {
-                m.splInvers();
+                jwbakhir = m.splInvers();
             } else if (pilihan == 4) {
-                m.splCramer();
+                jwbakhir = m.splCramer();
             }
-
-            //m.konfirmOutputkeFile();
+            m.konfirmOutputkeFile(1,0,jwbakhir);
         } else if (pilihanInputMatriks == 2) {
             System.out.println("Masukkan nama file yang akan dibaca: ");
             String namaFile = sc.nextLine();
@@ -51,44 +52,15 @@ public class MenuSPL {
 
             /* SPL */
             if (pilihan == 1) {
-                m.splGauss();
+                jwbakhir = m.splGauss();
+            } else if (pilihan == 2) {
+                jwbakhir = m.splGaussJordan();
+            } else if (pilihan == 3) {
+                jwbakhir = m.splInvers();
+            } else if (pilihan == 4) {
+                jwbakhir = m.splCramer();
             }
-            //m.konfirmOutputkeFile();
+            m.konfirmOutputkeFile(1,0,jwbakhir);
         }
     }
-    //jeffrey coba kerja
-    // private void PilihanSatuDua(Matriks m){
-    // //IS matriks m sudah berisi matriks inputan dari user, berbentuk augmented.
-    // //FS melakukan perhitungan dengan gauss atau gauss jordan, trus bisa ngecover semua tipe output. m nya rusak ya, jdi datanya keubah2 dalemnya
-    // //aku pisah pilihan satu dua karena kalo pilihan 3 4, ngeceknya beda(keknya ngecek pake determinan)
-    //     m.OBEGaussJordan(m.Baris(), m.Kolom());
-    //     m.displayMatriks();
-    //     int MatriksType = 0; // 0 artinya punya 1 jawaban, 1 punya banyak jawaban, 2 gapunya jawaban
-    //     int BarisEfektif = m.Baris();
-    //     for(int b = 0;b< m.Baris();b++){
-    //         if(m.semuaBarisNol(b, m.Kolom() - 1)){
-    //             if(m.Isi(b, m.Kolom()-1) == 0)
-    //             BarisEfektif -= 1;
-    //             else{//berarti bentuknya 0 0 0 1, gk punya jawaban
-    //                 System.out.println("gapunya jawaban");
-    //                 MatriksType = 2;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     m.ubahBaris(BarisEfektif);
-    //     if (MatriksType != 2){
-    //         if(m.Baris() == m.Kolom() - 1){//kalo jumlah baris dan kolom sama(augmented sidenya gk termasuk), berarti dia punya satu jawaban
-    //             System.out.println("punya satu jawaban, hasilnya adalah:");
-    //             MatriksType = 0;
-    //             for(int b = 0;b< m.Baris();b++){
-    //                 System.out.format("x(%d) = %d\n", b+1, m.Isi(b, m.Kolom()-1));
-    //             }
-    //         }
-    //         else{//punya banyak jawaban
-    //             System.out.println("punya banyak jawaban,");
-    //             m.displayMatriks();
-    //         }
-    //     }
-    // }//end of pilihan satu dua
 }

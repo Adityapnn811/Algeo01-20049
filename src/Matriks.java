@@ -350,10 +350,10 @@ public class Matriks{
         // 1 = SPL, 2 = Determinan, 3 = Invers, 4 = Interpolasi, 5 = Regresi
         System.out.print("Masukkan nama file (tanpa .txt dan jangan gunakan spasi): ");
         String filename = sc.next();
-        if (tipePersoalan == 1) {
+        if (tipePersoalan == 1 || tipePersoalan == 4 || tipePersoalan == 5) {
             try{
                 FileWriter writer = new FileWriter(filename + ".txt");
-                writer.write("Jawaban SPL: " + Double.toString(det));
+                writer.write(line);
                 System.out.println("File berhasil disimpan di " + filename + ".txt");
                 writer.close();
             } catch (IOException e){
@@ -389,26 +389,6 @@ public class Matriks{
                 System.out.println("Terjadi sebuah error");
                 e.printStackTrace();
             }  
-        } else if(tipePersoalan == 4){
-            try{
-                FileWriter writer = new FileWriter(filename + ".txt");
-                writer.write(line);
-                System.out.println("File berhasil disimpan di " + filename + ".txt");
-                writer.close();
-            } catch (IOException e){
-                System.out.println("Terjadi sebuah error");
-                e.printStackTrace();
-            }   
-        } else if(tipePersoalan == 5){
-            try{
-                FileWriter writer = new FileWriter(filename + ".txt");
-                writer.write(line);
-                System.out.println("File berhasil disimpan di " + filename + ".txt");
-                writer.close();
-            } catch (IOException e){
-                System.out.println("Terjadi sebuah error");
-                e.printStackTrace();
-            }   
         }
     }
 
@@ -657,8 +637,9 @@ public class Matriks{
     /* PROSEDUR SPL MATRIKS */
     
     // Menggunakan cara Gauss
-    void splGauss(){
+    String splGauss(){
         /* KAMUS */
+        String jwbakhir = "";
         int i = this.baris-1; // indeks matriks yang sedang diproses
         int jumlahx = this.kolom-1;
         double solusix[] = new double[this.kolom-1];
@@ -668,16 +649,24 @@ public class Matriks{
 
         // eliminasi Gauss
         this.OBEGauss(this.baris, this.kolom);
-        System.out.println("Matriks setelah dilakukan eliminasi Gauss:");
-        this.displayMatriks();
+        jwbakhir += "Matriks setelah dilakukan eliminasi Gauss:\n";
+        for (int ii = 0; ii < this.Baris(); ii++){
+            for (int j = 0; j < this.Kolom(); j++) {
+                if (this.Isi(ii, j) == -0.0){ // Menghilangkan -0
+                    this.isi[ii][j] = Math.abs(-0.0);
+                }
+                jwbakhir += String.format("%.3f ", this.Isi(ii, j));
+            }
+            jwbakhir += "\n";
+        }
 
         // matriks homogen
         if (homogen) {
-            System.out.println("SPL memiliki solusi trivial:");
+            jwbakhir += "SPL memiliki solusi trivial:\n";
             for (int x=1;x<=jumlahx;x++) {
-                System.out.printf("x%d = 0.000; ", x);
+                jwbakhir += String.format("x%d = 0.000; ", x);
             }
-            System.out.println();
+            jwbakhir += "\n";
         }
 
         // drop baris yang isinya semua 0
@@ -687,24 +676,26 @@ public class Matriks{
 
         // matriks tidak memiliki solusi
         if (semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0 && !homogen) {
-            System.out.println("SPL tidak memiliki solusi");
+            jwbakhir += "SPL tidak memiliki solusi\n";
         } 
         // matriks memiliki solusi tunggal
-        else if (i == this.kolom-2){
-            for (int j=i;j>=0;j--) {
-                double minus = 0;
-                for (int k=j+1;k<jumlahx;k++) {
-                    minus += solusix[k]*this.Isi(j,k);
+        else if (i == this.kolom-2) {
+            if (!homogen) {
+                for (int j=i;j>=0;j--) {
+                    double minus = 0;
+                    for (int k=j+1;k<jumlahx;k++) {
+                        minus += solusix[k]*this.Isi(j,k);
+                    }
+                    solusix[j] = this.Isi(j, this.kolom-1) - minus;
                 }
-                solusix[j] = this.Isi(j, this.kolom-1) - minus;
+                
+                // print solusi
+                jwbakhir += "SPL memiliki solusi tunggal:\n";
+                for (int a=0;a<jumlahx;a++) {
+                    jwbakhir += String.format("x%d = %.3f; ", a+1,solusix[a]);
+                }
+                jwbakhir += "\n";
             }
-            
-            // print solusi
-            System.out.printf("SPL memiliki solusi tunggal:\n");
-            for (int a=0;a<jumlahx;a++) {
-                System.out.printf("x%d = %.3f; ", a+1,solusix[a]);
-            }
-            System.out.println();
         }
         // matriks memiliki tak hingga solusi
         else{
@@ -724,44 +715,54 @@ public class Matriks{
                 }
             }
             // print solusi
-            System.out.printf("SPL memiliki tak hingga solusi:\n");
+            jwbakhir += "SPL memiliki tak hingga solusi:\n";
             char temp = 'a';
-            System.out.println("Misalkan:");
+            jwbakhir += "Misalkan:\n";
             for(int b = 0;b<this.kolom -1;b++){
                 temp = 'a';
                 temp += b;
                 if(is_variabled[b]){
-                    System.out.format("x%d = %c\n", b+1,temp);
+                    jwbakhir += String.format("x%d = %c\n", b+1,temp);
                 }
             }
-            System.out.println("Maka:");
+            jwbakhir += "Maka:\n";
             for(int b = 0;b <this.baris;b++){
                 for(int k = 0;k< this.kolom;k++){
                     if(this.isi[b][k] != 0){
-                        if(k != this.kolom -1){//kalo dia bukan sisi augemented
-                        
+                        if(k != this.kolom -1){//kalo dia bukan sisi augemented    
                             if(!(is_variabled[k])){
-                                System.out.format("x%d = ",k+1);
+                                jwbakhir += String.format("x%d = ",k+1);
                             }
                             else{ //artinya dia variabel
                                 temp = 'a';
                                 temp += k;
-                                System.out.format("%.3f%c + ",(-1*this.isi[b][k]), temp);
+                                jwbakhir += String.format("%.3f%c + ",(-1*this.isi[b][k]), temp);
                             }
                         }
                         else{ //dia sisi augmented
-                            System.out.format("%.3f",this.isi[b][k]);
+                            jwbakhir += String.format("%.3f",this.isi[b][k]);
                         }
                     }
                 }
-                System.out.println();
+                jwbakhir += "\n";
             }
+            
         }
+        while (jwbakhir.charAt((jwbakhir.length())-1) == '\n') {
+            jwbakhir = jwbakhir.substring(0,(jwbakhir.length())-1);
+        }
+
+        // print solusi
+        System.out.printf("%s\n", jwbakhir);
+
+        // return
+        return (jwbakhir);
     }
 
     // Menggunakan cara Gauss-Jordan
-    void splGaussJordan() {
+    String splGaussJordan() {
         /* KAMUS */
+        String jwbakhir = "";
         int i = this.baris-1; // indeks matriks yang sedang diproses
         int jumlahx = this.kolom-1;
         boolean homogen = this.isMatriksHomogen();
@@ -771,15 +772,23 @@ public class Matriks{
         // eliminasi Gauss-Jordan
         this.OBEGaussJordan(this.baris, this.kolom);
         System.out.println("Matriks setelah dilakukan eliminasi Gauss-Jordan:");
-        this.displayMatriks();
+        for (int ii = 0; ii < this.Baris(); ii++){
+            for (int j = 0; j < this.Kolom(); j++) {
+                if (this.Isi(ii, j) == -0.0){ // Menghilangkan -0
+                    this.isi[ii][j] = Math.abs(-0.0);
+                }
+                jwbakhir += String.format("%.3f ", this.Isi(ii, j));
+            }
+            jwbakhir += "\n";
+        }
 
         // matriks homogen
         if (homogen) {
-            System.out.println("SPL memiliki solusi trivial:");
+            jwbakhir += "SPL memiliki solusi trivial:\n";
             for (int x=1;x<=jumlahx;x++) {
-                System.out.printf("x%d = 0.000; ", x);
+                jwbakhir += String.format("x%d = 0.000; ", x);
             }
-            System.out.println();
+            jwbakhir += "\n";
         }
 
         // drop baris yang isinya semua 0
@@ -789,16 +798,18 @@ public class Matriks{
 
         // matriks tidak memiliki solusi
         if (semuaBarisNol(i, this.kolom-1) && this.Isi(i, this.kolom-1) != 0 && !homogen) {
-            System.out.println("SPL tidak memiliki solusi");
+            jwbakhir += "SPL tidak memiliki solusi";
         } 
         // matriks memiliki solusi tunggal
-        else if (i == jumlahx-1) {        
-            // print solusi
-            System.out.printf("SPL memiliki solusi tunggal:\n");
-            for (int a=0; a<jumlahx; a++) {
-                System.out.printf("x%d = %.3f; ", a+1, this.Isi(a, this.Kolom()-1));
+        else if (i == jumlahx-1) {
+            if (!homogen) {        
+                // print solusi
+                jwbakhir += "SPL memiliki solusi tunggal:\n";
+                for (int a=0; a<jumlahx; a++) {
+                    jwbakhir += String.format("x%d = %.3f; ", a+1, this.Isi(a, this.Kolom()-1));
+                }
+                jwbakhir += "\n";
             }
-            System.out.println();
         }
         // matriks memiliki tak hingga solusi
         else{
@@ -818,42 +829,52 @@ public class Matriks{
                 }
             }
             // print solusi
-            System.out.printf("SPL memiliki tak hingga solusi:\n");
+            jwbakhir += "SPL memiliki tak hingga solusi:\n";
             char temp = 'a';
-            System.out.println("Misalkan:");
+            jwbakhir += "Misalkan:\n";
             for(int b = 0;b<this.kolom -1;b++){
                 temp = 'a';
                 temp += b;
                 if(is_variabled[b]){
-                    System.out.format("x%d = %c\n", b+1,temp);
+                    jwbakhir += String.format("x%d = %c\n", b+1,temp);
                 }
             }
-            System.out.println("Maka:");
+            jwbakhir += "Maka:\n";
             for(int b = 0; b<this.baris; b++) {
                 for(int k = 0; k<this.kolom; k++) {
                     if(this.isi[b][k] != 0){
                         if(k != this.kolom-1) { //kalo dia bukan sisi augemented
                             if(!(is_variabled[k])) {
-                                System.out.format("x%d = ",k+1);
+                                jwbakhir += String.format("x%d = ",k+1);
                             }
                             else{ //artinya dia variabel
                                 temp = 'a';
                                 temp += k;
-                                System.out.format("%.3f%c + ",(-1*this.isi[b][k]), temp);
+                                jwbakhir += String.format("%.3f%c + ",(-1*this.isi[b][k]), temp);
                             }
                         } else { //dia sisi augmented
-                            System.out.format("%.3f",this.isi[b][k]);
+                            jwbakhir += String.format("%.3f",this.isi[b][k]);
                         }
                     }
                 }
-                System.out.println();
-            }            
+                jwbakhir += "\n";
+            }
+            
+            while (jwbakhir.charAt((jwbakhir.length())-1) == '\n') {
+                jwbakhir = jwbakhir.substring(0,(jwbakhir.length())-1);
+            }
         }
+        // print solusi
+        System.out.printf("%s\n", jwbakhir);
+
+        // return
+        return (jwbakhir);
     }
 
     // Menggunakan matriks balikan
-    void splInvers() {
+    String splInvers() {
         /* KAMUS */
+        String jwbakhir;
         double det = 1;
         Matriks solusi;
         Matriks reduksi;
@@ -862,7 +883,7 @@ public class Matriks{
 
         /* ALGORITMA */
         if (this.Baris() != jumlahx) {
-            System.out.println("SPL tidak memiliki solusi tunggal");
+            jwbakhir = "SPL tidak memiliki solusi tunggal";
         } else {
             // pisah matriks augmented menjadi 2 matriks (bentuk Ax=B)
             for (int i=0; i < hasil.Baris(); i++){
@@ -878,7 +899,7 @@ public class Matriks{
             }
 
             if (det == 0) {
-                System.out.println("SPL tidak memiliki solusi tunggal");
+                jwbakhir = "SPL tidak memiliki solusi tunggal";
             } else {
                 // invers matriks
                 Matriks kofaktor = new Matriks(this.Baris(), this.Kolom());
@@ -890,26 +911,38 @@ public class Matriks{
                         this.isi[b][k] = (1/det) * adj.Isi(b, k);
                     }
                 }
-                System.out.println("Matriks hasil invers adalah:");
-                this.displayMatriks();
+                jwbakhir = "Matriks hasil invers adalah:\n";
+                for (int i = 0; i < this.Baris(); i++){
+                    for (int j = 0; j < this.Kolom(); j++) {
+                        if (this.Isi(i, j) == -0.0){ // Menghilangkan -0
+                            this.ubahIsi(i, j, Math.abs(-0.0));
+                        }
+                        jwbakhir += String.format("%.3f ", this.Isi(i, j));
+                    }
+                    jwbakhir += "\n";
+                }
 
                 // matriks invers * matriks hasil
                 solusi = perkalianMatriks(this, hasil);
 
                 // print solusi
-                System.out.println("SPL memiliki solusi:");
+                jwbakhir += "SPL memiliki solusi:\n";
                 for (int i=0;i<solusi.Baris();i++) {
-                    System.out.printf("x%d = %.3f; ", i+1, solusi.Isi(i, 0));
+                    jwbakhir += String.format("x%d = %.3f; ", i+1, solusi.Isi(i, 0));
                 }
-                System.out.println();
-            }
-            
+            }    
         }
+        // print solusi
+        System.out.printf("%s\n", jwbakhir); 
+
+        //return
+        return (jwbakhir);
     }
 
     // Kaidah Cramer
-    void splCramer() {
+    String splCramer() {
         /* KAMUS */
+        String jwbakhir;
         double detMatriks;
         int jumlahx = this.Kolom()-1;
         double dets[] = new double[jumlahx];
@@ -918,7 +951,7 @@ public class Matriks{
 
         /* ALGORITMA */
         if (this.Baris() != jumlahx) {
-            System.out.println("SPL tidak memiliki solusi tunggal");
+            jwbakhir = "SPL tidak memiliki solusi tunggal";
         } else {
             // pisah matriks augmented menjadi 2 matriks (bentuk Ax=B)
             for (int i=0; i<hasil.Baris(); i++){
@@ -930,7 +963,7 @@ public class Matriks{
             detMatriks = det(this);
 
             if (detMatriks == 0) {
-                System.out.println("SPL tidak memiliki solusi tunggal");
+                jwbakhir = "SPL tidak memiliki solusi tunggal";
             } else {
                 // cari determinan x1, x2, x3,...
                 for (int i=0; i<this.Kolom(); i++) { // iterasi kolom
@@ -942,17 +975,20 @@ public class Matriks{
                 }
 
                 // print solusi
-                System.out.printf("Determinan matriks utama = %.3f\nDeterminan x:\n", detMatriks);
+                jwbakhir = String.format("Determinan matriks utama = %.3f\nDeterminan x:\n", detMatriks);
                 for (int i=0; i<jumlahx; i++) {
-                    System.out.printf("Dx%d = %.3f; ", i+1, dets[i]);
+                    jwbakhir += String.format("Dx%d = %.3f; ", i+1, dets[i]);
                 }
-                System.out.println("\nSolusi SPL dapat dihitung dengan cara membagi determinan x ke-x dengan determinan utama. Maka,");
+                jwbakhir += "\nSolusi SPL dapat dihitung dengan cara membagi determinan x ke-x dengan determinan utama. Maka,\n";
                 for (int i=0; i<jumlahx; i++) {
-                    System.out.printf("x%d = %.3f; ", i+1, (dets[i]/detMatriks));
+                    jwbakhir += String.format("x%d = %.3f; ", i+1, (dets[i]/detMatriks));
                 }
-                System.out.println();
             }
-        }    
-    }
+        }
+        // print solusi
+        System.out.printf("%s\n", jwbakhir); 
 
+        // return
+        return (jwbakhir);
+    }
 }
