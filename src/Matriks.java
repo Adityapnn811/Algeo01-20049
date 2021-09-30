@@ -17,7 +17,7 @@ public class Matriks{
         this.kolom = k;
         this.isi = new double[b][k];
     }
-    /* *** Fungsi primitif dan basic lain *** */
+/* ********** FUNGSI PRIMITIF ********** */
     int Baris(){
         //untuk mendapatkan baris dari matriks
        return this.baris; 
@@ -164,93 +164,7 @@ public class Matriks{
         /* ALGORITMA */
         return (semuaKolomNol(this.Kolom()-1, this.Baris()));
     }
-
-    /* *** PROSEDUR OBE *** */
-    // GAUSS
-    void OBEGauss(int b, int k){
-        //cari di kolom 1 mana yang enggak 0, terus tuker ke paling atas (sesuaikan pass ke berapa)
-        // terus lakuin OBE sampe bawahnya nol semua
-        int b_pass = 0, k_pass = 0; //inisiasi pass baris dan kolom
-        int b_ganti = 0; 
-        double pembagi;
-        while (b_pass < b && k_pass < k){
-            if (this.Isi(b_ganti, k_pass) == 0){
-                if (b_ganti == b - 1){ // biar nilai b_ganti ngga lebih dari b_pass
-                    b_ganti = b_pass;
-                    k_pass += 1;
-                } else{
-                    b_ganti = b_ganti + 1;
-                }
-            } else {
-                if (b_ganti != b_pass){
-                    this.tukarBaris(b_ganti, b_pass); 
-                }
-                pembagi = this.Isi(b_pass, k_pass);
-                // Jadiin leading one
-                for (int j = 0; j < k; j++){
-                    this.ubahIsi(b_pass, j, (this.Isi(b_pass, j)/pembagi));
-                }
-                // Kurangi baris lain
-                // cek apakah sudah pass terakhir
-                if (b_pass != b-1){
-                    for (int i = b_pass + 1; i < b; i++){
-                        if (this.isi[i][k_pass] != 0){
-                            double pengali = this.isi[i][k_pass];
-                            this.isi[i][k_pass] = 0;
-                            for (int j = k_pass + 1; j < k; j++){
-                                this.isi[i][j] -= this.Isi(b_pass, j) * pengali;
-                                if (this.isi[i][j] == -0.0){ // Menghilangkan -0
-                                    this.isi[i][j] = Math.abs(-0.0);
-                                }
-                            }       
-                        }
-                    }
-                }
-                b_pass += 1;
-                k_pass += 1;
-                b_ganti = b_pass;
-            }
-        }
-    }
-    
-    // GAUSS JORDAN
-    void OBEGaussJordan(int b, int k){
-        //cari di kolom 1 mana yang enggak 0, terus tuker ke paling atas (sesuaikan pass ke berapa)
-        // terus lakuin OBE sampe bawahnya nol semua
-        int b_pass = 0, k_pass = 0; //inisiasi pass baris dan kolom
-        this.OBEGauss(b, k);
-        // Reduksi menjadi gauss-jordan
-        b_pass = b -1; k_pass = 0;
-        while (b_pass > -1 && k_pass < k) {
-            //cari leading one dari baris paling bawah
-            if (this.isi[b_pass][k_pass] != 1) {
-                if (k_pass == k - 1) {
-                    b_pass -= 1;
-                    k_pass = 0;
-                } else {
-                    k_pass += 1;
-                }
-            }
-            else { //udah ketemu leading one
-                for (int i = b_pass - 1; i > -1; i--){
-                    if (this.isi[i][k_pass] != 0){
-                        double pengali = this.isi[i][k_pass];
-                        this.isi[i][k_pass] = 0;
-                        for (int j = k_pass + 1; j < k; j++){
-                            this.isi[i][j] -= this.Isi(b_pass, j) * pengali;
-                            if (this.isi[i][j] == -0.0){
-                                this.isi[i][j] = Math.abs(-0.0);
-                            } //menghilangkan -0
-                        }       
-                    }
-                }
-                b_pass -= 1;
-                k_pass = 0;
-            }
-        }
-    }
-
-    /* ********** KELOMPOK BACA/TULIS ********** */
+/* ********** KELOMPOK BACA/TULIS ********** */
     // Mengisi matriks
     void isiMatriks() {
         for (int i = 0; i < this.baris; i++){
@@ -409,10 +323,94 @@ public class Matriks{
                 this.outputToFile(tipePersoalan, det, line);
             }
     }
+/* ********** KELOMPOK TAMBAHAN ********** */
+/* *** METHOD OBE *** */
+    // GAUSS
+    void OBEGauss(int b, int k){
+        //cari di kolom 1 mana yang enggak 0, terus tuker ke paling atas (sesuaikan pass ke berapa)
+        // terus lakuin OBE sampe bawahnya nol semua
+        int b_pass = 0, k_pass = 0; //inisiasi pass baris dan kolom
+        int b_ganti = 0; 
+        double pembagi;
+        while (b_pass < b && k_pass < k){
+            if (this.Isi(b_ganti, k_pass) == 0){
+                if (b_ganti == b - 1){ // biar nilai b_ganti ngga lebih dari b_pass
+                    b_ganti = b_pass;
+                    k_pass += 1;
+                } else{
+                    b_ganti = b_ganti + 1;
+                }
+            } else {
+                if (b_ganti != b_pass){
+                    this.tukarBaris(b_ganti, b_pass); 
+                }
+                pembagi = this.Isi(b_pass, k_pass);
+                // Jadiin leading one
+                for (int j = 0; j < k; j++){
+                    this.ubahIsi(b_pass, j, (this.Isi(b_pass, j)/pembagi));
+                }
+                // Kurangi baris lain
+                // cek apakah sudah pass terakhir
+                if (b_pass != b-1){
+                    for (int i = b_pass + 1; i < b; i++){
+                        if (this.isi[i][k_pass] != 0){
+                            double pengali = this.isi[i][k_pass];
+                            this.isi[i][k_pass] = 0;
+                            for (int j = k_pass + 1; j < k; j++){
+                                this.isi[i][j] -= this.Isi(b_pass, j) * pengali;
+                                if (this.isi[i][j] == -0.0){ // Menghilangkan -0
+                                    this.isi[i][j] = Math.abs(-0.0);
+                                }
+                            }       
+                        }
+                    }
+                }
+                b_pass += 1;
+                k_pass += 1;
+                b_ganti = b_pass;
+            }
+        }
+    }
+    
+    // GAUSS JORDAN
+    void OBEGaussJordan(int b, int k){
+        //cari di kolom 1 mana yang enggak 0, terus tuker ke paling atas (sesuaikan pass ke berapa)
+        // terus lakuin OBE sampe bawahnya nol semua
+        int b_pass = 0, k_pass = 0; //inisiasi pass baris dan kolom
+        this.OBEGauss(b, k);
+        // Reduksi menjadi gauss-jordan
+        b_pass = b -1; k_pass = 0;
+        while (b_pass > -1 && k_pass < k) {
+            //cari leading one dari baris paling bawah
+            if (this.isi[b_pass][k_pass] != 1) {
+                if (k_pass == k - 1) {
+                    b_pass -= 1;
+                    k_pass = 0;
+                } else {
+                    k_pass += 1;
+                }
+            }
+            else { //udah ketemu leading one
+                for (int i = b_pass - 1; i > -1; i--){
+                    if (this.isi[i][k_pass] != 0){
+                        double pengali = this.isi[i][k_pass];
+                        this.isi[i][k_pass] = 0;
+                        for (int j = k_pass + 1; j < k; j++){
+                            this.isi[i][j] -= this.Isi(b_pass, j) * pengali;
+                            if (this.isi[i][j] == -0.0){
+                                this.isi[i][j] = Math.abs(-0.0);
+                            } //menghilangkan -0
+                        }       
+                    }
+                }
+                b_pass -= 1;
+                k_pass = 0;
+            }
+        }
+    }
 
-    /* *** PROSEDUR INVERS DENGAN OBE *** */
-    /* ********** KELOMPOK FUNGSI TAMBAHAN ********** */
-    /* PROSEDUR INVERS DENGAN OBE */
+
+/* *** PROSEDUR INVERS DENGAN OBE *** */
     void inversMatriksOBE(){
         // Ubah ukuran matriks dan beri matriks identitas, simpan di mTemp
         Matriks mTemp = new Matriks(this.baris, this.kolom * 2);
@@ -462,7 +460,7 @@ public class Matriks{
         }
     }
 
-    /* PROSEDUR INVERS DENGAN ADJOIN */
+/* *** PROSEDUR INVERS DENGAN ADJOIN *** */
     void inversMatriksAdj(Matriks self){
         // buat matriks adjoin
         Matriks kofaktor = new Matriks(self.Baris(), self.Kolom());
@@ -537,6 +535,7 @@ public class Matriks{
         }
     }
 
+/* *** METHOD DETERMINAN *** */
     /*PROSEDUR UNTUK MENDAPATKAN DETERMINAN DENGAN CARA COFACTOR */
     void cofactor(Matriks m){
         //IS matriks m terdefinisi, berbentuk square dan sudah terisi. matriks this terdefinisi dengan ukuran yang sama dengan matriks m
@@ -567,7 +566,7 @@ public class Matriks{
         }
     }
 
-    /* *** REGRESI LINIER BERGANDA *** */
+/* *** REGRESI LINIER BERGANDA *** */
     void regresiLinierBerganda(){
         // IS matriks terdefinisi
         // FS terbentuk solusi regresi linier berganda dari matriks
@@ -635,9 +634,8 @@ public class Matriks{
         // Lakukan gauss-Jordan pada matriks
         this.OBEGauss(this.baris, this.kolom);
     }
-    
-    /* PROSEDUR SPL MATRIKS */
-    
+
+/* *** METHOD SPL *** */
     // Menggunakan cara Gauss
     String splGauss(){
         /* KAMUS */
