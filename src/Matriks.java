@@ -1,7 +1,6 @@
 import java.util.*;
 import java.lang.Math;
 import java.io.File;  // Import the File class
-import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -662,6 +661,25 @@ public class Matriks{
             }
             jwbakhir += "\n";
         }
+        /*TAMBAHAN JEFF */
+        //drop kalo ada baris yang isinya 0 semua
+        boolean nolSemua = true;
+        int JumBarisYgdiDrop = 0;
+        for(int loop = 0;loop < this.baris;loop++){
+            nolSemua = true;
+            for(int kolom = 0;kolom < this.kolom;kolom++){
+                if(this.isi[loop][kolom] != 0){
+                    nolSemua = false;
+                    break;
+                }
+            }
+            if(nolSemua){
+                JumBarisYgdiDrop++;
+            }
+        }
+        this.OBEGaussJordan(this.baris, this.kolom);
+        this.baris -= JumBarisYgdiDrop;
+        /*TAMBAHAN JEFF SELESAI */
 
         // matriks homogen
         if (homogen) {
@@ -731,7 +749,7 @@ public class Matriks{
             jwbakhir += "Maka:\n";
             for(int b = 0;b <this.baris;b++){
                 for(int k = 0;k< this.kolom;k++){
-                    if(this.isi[b][k] != 0){
+                    if(this.isi[b][k] != 0 ||  k == this.kolom - 1){
                         if(k != this.kolom -1){//kalo dia bukan sisi augemented    
                             if(!(is_variabled[k])){
                                 jwbakhir += String.format("x%d = ",k+1);
@@ -784,6 +802,24 @@ public class Matriks{
             }
             jwbakhir += "\n";
         }
+        /*TAMBAHAN JEFF */
+        //drop kalo ada baris yang isinya 0 semua
+        boolean nolSemua = true;
+        int JumBarisYgdiDrop = 0;
+        for(int loop = 0;loop < this.baris;loop++){
+            nolSemua = true;
+            for(int kolom = 0;kolom < this.kolom;kolom++){
+                if(this.isi[loop][kolom] != 0){
+                    nolSemua = false;
+                    break;
+                }
+            }
+            if(nolSemua){
+                JumBarisYgdiDrop++;
+            }
+        }
+        this.baris -= JumBarisYgdiDrop;
+        /*TAMBAHAN JEFF SELESAI */
 
         // matriks homogen
         if (homogen) {
@@ -845,7 +881,7 @@ public class Matriks{
             jwbakhir += "Maka:\n";
             for(int b = 0; b<this.baris; b++) {
                 for(int k = 0; k<this.kolom; k++) {
-                    if(this.isi[b][k] != 0){
+                    if(this.isi[b][k] != 0 || k == this.kolom-1){
                         if(k != this.kolom-1) { //kalo dia bukan sisi augemented
                             if(!(is_variabled[k])) {
                                 jwbakhir += String.format("x%d = ",k+1);

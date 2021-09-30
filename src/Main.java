@@ -1,9 +1,6 @@
 import java.util.*;
 import java.io.File;
-import java.lang.Math;
-import java.io.FileNotFoundException;  // Import this class to handle errors
-import java.io.FileWriter;
-import java.io.IOException;
+
 public class Main{
     static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
