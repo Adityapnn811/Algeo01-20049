@@ -1,3 +1,3 @@
-# src dipake apaan?
+# Folder `src`
 
-Folder src berisi source code dari program java
+Folder `src` berisi source code dari proyek dan berekstensi `.java`
