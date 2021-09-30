@@ -280,67 +280,76 @@ public class Matriks{
     public static int FileRow(String FileName){
         //mengembalikan jumlah kolom dari file dengan nama FileName. kalo filenya gk ketemu, return -1
         int lines = -1;
-        try{
-            Scanner reader = new Scanner(new File(FileName));
-            lines = 0;
-            while (reader.hasNextLine()){
-                reader.nextLine();
-                lines++;
+        while(true){
+            try{
+                Scanner reader = new Scanner(new File(FileName));
+                lines = 0;
+                while (reader.hasNextLine()){
+                    reader.nextLine();
+                    lines++;
+                }
+                reader.close();
+                break;
             }
-            reader.close();
-            
-        }
-        catch (FileNotFoundException e) {
-            System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
-            e.printStackTrace();
+            catch (Exception e) {
+                sc.next();
+                System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo). masukin lgi");
+            }
         }
         return lines;
     }
-    public static int FileColumn(String FileName){
-        //mengembalikan jumlah baris dari suatu file dengan nama FileName. kalo filenya gk ketemu, return -1
-        int kolom = -1;
-        try{
-            Scanner reader = new Scanner(new File(FileName));
-            kolom = 1;
-            String oneLine = reader.nextLine();
-            for(int i = 0;i < oneLine.length();i++){
-                if (oneLine.charAt(i) == ' ')
-                kolom++;
+        public static int FileColumn(String FileName){
+            //mengembalikan jumlah baris dari suatu file dengan nama FileName. kalo filenya gk ketemu, return -1
+            int kolom = -1;
+            while(true){
+                try{
+                    Scanner reader = new Scanner(new File(FileName));
+                    kolom = 1;
+                    String oneLine = reader.nextLine();
+                    for(int i = 0;i < oneLine.length();i++){
+                        if (oneLine.charAt(i) == ' ')
+                        kolom++;
+                    }
+                    reader.close();
+                    break;
+                }
+                catch (Exception e) {
+                    sc.next();
+                    System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
+                }
             }
-            reader.close();
+            return kolom;
         }
-        catch (FileNotFoundException e) {
-            System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
-            e.printStackTrace();
-        }
-        return kolom;
-    }
-
+            
     void ReadMatriksFromFile(String FileName){
         //IS matriks This terdefinisi, belum memiliki isi.
         //FS matriks sudah terisi sesuai dengan isi dari file FileName(pasti augmented)
-        try {
-            int b = 0;
-            int k = 0;
-            // isi matriks
-            File myObj = new File(FileName);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextDouble()) {
-              this.isi[b][k] = myReader.nextDouble();
-              //next data in matriks
-              if(k < this.kolom - 1){
-                  k++;
-              }
-              else{
-                  k = 0;
-                  b++;
-              }
+        while(true){
+
+            try {
+                int b = 0;
+                int k = 0;
+                // isi matriks
+                File myObj = new File(FileName);
+                Scanner myReader = new Scanner(myObj);
+                while (myReader.hasNextDouble()) {
+                    this.isi[b][k] = myReader.nextDouble();
+                    //next data in matriks
+                    if(k < this.kolom - 1){
+                        k++;
+                    }
+                    else{
+                        k = 0;
+                        b++;
+                    }
+                }
+                myReader.close();
+                break;
+            } 
+            catch (Exception e) {
+                sc.next();
+                System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
             }
-            myReader.close();
-        } 
-        catch (FileNotFoundException e) {
-            System.out.println("FILENYA GADA WOI BOONG LU(ato bisa juga typo)");
-            e.printStackTrace();
         }
     }
 
