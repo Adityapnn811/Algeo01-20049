@@ -1,3 +1,3 @@
-# bin dipake apaan?
+# Folder `bin`
 
-Folder bin berisi java bytecode (*.class)
+Folder bin berisi java bytecode (*.class) 
