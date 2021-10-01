@@ -17,6 +17,12 @@
    <li>Kalkulator regresi linier berganda
 </ul>
 
+## Struktur Direktori
+1. `bin` berisi java <em>bytecodes (*.class)</em> dari <em>source code</em> program.
+2. `doc` berisi laporan dari proyek 1 mata kuliah aljabar linier dan geometri.
+3. `src` berisi <em>source code</em> dari program.
+4. `test` berisi input file `.txt` yang berisi matriks dari studi kasus. 
+
 ## Lingkungan Pengerjaan
 <p>Proyek ini dikerjakan dalam lingkungan:</p>
 <ul>
